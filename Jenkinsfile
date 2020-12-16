@@ -42,7 +42,7 @@ pipeline {
             steps {
                 script{
                     scaAgentZip = "sca-agent.${VERSION}.zip"
-                    sh(label: "Create bundle", script: "sh bundle.sh ${scaAgentZip}")
+                    sh(label: "Create bundle", script: "sh dev/bundle.sh ${scaAgentZip}")
                     archiveArtifacts artifacts: scaAgentZip
                 }
             }
