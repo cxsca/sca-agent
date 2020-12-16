@@ -1,0 +1,196 @@
+version: "3.7"
+services:
+  ########################################################################
+  reverse-proxy:
+    image: traefik:v2.3
+    environment:
+      - ACCESS_CONTROL_PROTOCOL
+      - ACCESS_CONTROL_HOST
+      - SCA_API_PROTOCOL
+      - SCA_API_HOST
+      - HTTPS_PROXY
+      - NO_PROXY
+    ports:
+      - "${EXTERNAL_PORT}:80"
+      - "${TRAEFIK_DASHBOARD_PORT}:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./volumes/traefik/traefik.toml:/etc/traefik/traefik.toml
+      - ./volumes/traefik/traefik-dynamic.yml:/dynamic/traefik-dynamic.yml
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: tag-reverse-proxy
+        fluentd-async-connect: "true"
+    depends_on:
+      - fluentbit
+      - scan-runner
+    networks:
+      - sca-agent
+  ########################################################################
+  fluentbit:
+    image: fluent/fluent-bit:1.6
+    volumes:
+      - ./volumes/fluentbit:/fluent-bit/etc
+      - ${LOG_LOCATION}:/var/log/sca
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    networks:
+      - sca-agent
+  ########################################################################
+  log-files-cleaner:
+    image: alpine:3.12
+    environment:
+      - LOG_FILES_EXPIRATION_IN_DAYS
+      - HTTPS_PROXY
+      - NO_PROXY
+    entrypoint: ["/bin/sh", "/sca-agent/scripts/clean-old-log-files.sh"]
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: tag-cleaner
+    depends_on:
+      - fluentbit
+    volumes:
+      - ./volumes/log-files-cleaner/clean-old-log-files.sh:/sca-agent/scripts/clean-old-log-files.sh
+      - ${LOG_LOCATION}:/var/log/sca
+    networks:
+      - sca-agent
+  ########################################################################
+  minio:
+    image: minio/minio:RELEASE.2020-09-26T03-44-56Z
+    restart: always
+    volumes:
+      - minio_data:/data
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY_ID}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_ACCESS_KEY}
+      MINIO_REGION_NAME: ${MINIO_REGION}
+      HTTPS_PROXY:
+      NO_PROXY:
+    command: server /data
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.minio.rule: PathPrefix(`/minio`) || PathPrefix(`/uploads`)
+      traefik.http.services.minio.loadbalancer.server.port: 9000
+    networks:
+      - sca-agent
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: tag-minio
+        fluentd-async-connect: "true"
+    depends_on:
+      - fluentbit
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://minio:9000/minio/health/live"]
+      interval: 2s
+      timeout: 20s
+      retries: 30
+  ########################################################################
+  minio-buckets-creator:
+    image: minio/mc:RELEASE.2020-06-26T19-56-55Z
+    restart: on-failure
+    environment:
+      - MINIO_ACCESS_KEY_ID
+      - MINIO_SECRET_ACCESS_KEY
+      - UPLOADS_BUCKET
+      - BUCKET_EXPIRATION_IN_DAYS
+      - HTTPS_PROXY
+      - NO_PROXY
+    depends_on:
+      - fluentbit
+      - minio
+    entrypoint: ["/bin/sh", "/sca-agent/scripts/setup-minio-buckets.sh"]
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: tag-minio-mc
+        fluentd-async-connect: "true"
+    volumes:
+      - ./volumes/minio-buckets-creator/setup-minio-buckets.sh:/sca-agent/scripts/setup-minio-buckets.sh
+    networks:
+      - sca-agent
+  ########################################################################
+  scan-runner:
+    image: cxsca/scan-runner:2020.12.15.0057-f12e8c4
+    restart: always
+    environment:
+      PRETTY: ${PRETTY_LOG}
+      ENABLESYSTEMMETRIC : ${FILESYSTEM_FREESPACE_CHECK_ENABLE}
+      SYSTEMMETRICINTERVALSECONDS: ${FILESYSTEM_FREESPACE_CHECK_PERIOD_SECONDS}
+      LOCALACCESSKEY: ${MINIO_ACCESS_KEY_ID}
+      LOCALSECRETKEY: ${MINIO_SECRET_ACCESS_KEY}
+      LOCALREGION: ${MINIO_REGION}
+      LOCALSERVERURL: http://${MINIO_ENDPOINT}
+      BUCKETNAME: ${UPLOADS_BUCKET}
+      SOURCERESOLVERDEGREEOFPARALLELISM: ${PARALLEL_SCANS}
+      UPLOADSEXTERNALBASEURL: ${TRANSFER_PROTOCOL}://${EXTERNAL_HOSTNAME}:${EXTERNAL_PORT}
+      SCA_API_URL: ${SCA_API_PROTOCOL}://${SCA_API_HOST}
+      SOURCERESOLVERAPI: http://source-resolver
+      EXECUTIONMODE: sca-agent
+      HTTPS_PROXY:
+      NO_PROXY:
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.scan-runner.rule: PathPrefix(`/api`)
+      traefik.http.services.scan-runner.loadbalancer.server.port: 80
+      traefik.http.middlewares.scan-runner-strip.stripprefix.prefixes: /api
+      traefik.http.routers.scan-runner.middlewares: scan-runner-strip
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: tag-lumo-logging-scanrunner
+    depends_on:
+      - fluentbit
+      - source-resolver
+    networks:
+      - sca-agent
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://scan-runner/health"]
+      interval: 2s
+      timeout: 20s
+      retries: 30
+  ########################################################################
+  source-resolver:
+    image: cxsca/source-resolver:2020.12.14.2302-16996a4
+    restart: always
+    environment:
+      ENABLESTDOUT: "true"
+      PRETTY: ${PRETTY_LOG}
+      ENABLESYSTEMMETRIC : ${FILESYSTEM_FREESPACE_CHECK_ENABLE}
+      SYSTEMMETRICINTERVALSECONDS: ${FILESYSTEM_FREESPACE_CHECK_PERIOD_SECONDS}
+      ENABLESEQ: "false"
+      ENABLEAPM: "false"
+      LOGEVENTLEVEL: Information
+      VERSION: SCA-Agent-0.1
+      HTTPS_PROXY:
+      NO_PROXY:
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: tag-lumo-logging-sourceresolver
+    depends_on:
+      - fluentbit
+      - minio
+    networks:
+      - sca-agent
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://source-resolver/health"]
+      interval: 2s
+      timeout: 20s
+      retries: 30
+
+  ########################################################################
+volumes:
+  minio_data:
+networks:
+  sca-agent:
+    name: sca-agent

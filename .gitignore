@@ -1,0 +1,15 @@
+# IDEs
+.vscode
+.idea
+
+# Logs
+logs
+
+# Zips
+*.zip
+
+# macOS
+.DS_Store
+
+# Bundle
+VERSION

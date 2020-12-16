@@ -1,0 +1,26 @@
+version: "3.7"
+services:
+  e2e:
+    image: ${E2E_IMAGE_URL}:master-latest
+    command: >
+      bash -cxe "
+        timeout 60 bash -c 'while [[ \"$$(curl -s -o /dev/null -w ''%{http_code}'' ${EXTERNAL_HOSTNAME}/api/health)\" != \"200\" ]]; do sleep 1; done' || false
+        dotnet test E2ETests.dll --filter TestedService=AstAdapter
+      "
+    environment:
+      PRETTY: ${PRETTY_LOG}
+      AUTHENTICATIONTOKENSOURCE: ${AUTHENTICATIONTOKENSOURCE}
+      SCOPE: ${SCOPE}
+      GRANT_TYPE: ${GRANT_TYPE}
+      ACCESSCONTROLCLIENTID: ${ACCESSCONTROLCLIENTID}
+      SCATENANT: ${SCATENANT}
+      SCAUSERNAME: ${SCAUSERNAME}
+      SCAPASSWORDSECRET: ${SCAPASSWORDSECRET}
+      ACCESSCONTROLBASEURL: ${TRANSFER_PROTOCOL}://${EXTERNAL_HOSTNAME}
+      SCAAPPBASEURL: ${TRANSFER_PROTOCOL}://${EXTERNAL_HOSTNAME}
+    networks:
+      - sca-agent
+networks:
+  sca-agent:
+    name: sca-agent
+    external: true

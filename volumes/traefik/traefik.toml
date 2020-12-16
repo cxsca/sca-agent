@@ -1,0 +1,21 @@
+defaultEntryPoints = ["http", "https"]
+
+[entryPoints]
+[entryPoints.http]
+address = ":80"
+
+[api]
+insecure = true
+
+[providers.docker]
+exposedbydefault = false
+
+[providers.file]
+directory = "/dynamic"
+
+[docker]
+domain = "sca-agent"
+network = "SCA"
+watch = true
+
+# [accessLog]
