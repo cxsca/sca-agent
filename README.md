@@ -4,6 +4,11 @@
 
 The SCA Agent is an hybrid on-prem solution for Checkmarx SCA. The agent resolves packages and acts as a proxy to SCA cloud.
 
+> **Disclaimer**
+>
+> Please note that this is a beta version of the SCA Agent. The product is still under development and testing, and is provided "as-is".
+
+
 ## Setup
 
 1. Install the latest versions of [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/).
