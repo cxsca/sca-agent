@@ -1,15 +1,12 @@
 # IDEs
 .vscode
 .idea
-
-# Logs
-logs
-
-# Zips
-*.zip
-
-# macOS
 .DS_Store
 
 # Bundle
+logs
+*.zip
 VERSION
+
+# Configurations
+/volumes/traefik/ssl

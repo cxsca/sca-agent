@@ -75,3 +75,21 @@ http:
       loadBalancer:
         servers:
           - url: {{env "ACCESS_CONTROL_PROTOCOL"}}://{{env "ACCESS_CONTROL_HOST"}}/
+
+# tls:
+#   stores:
+#     default: {}
+
+# tls:
+#   certificates:
+#     - certFile: /etc/traefik/ssl/cert.crt
+#       keyFile: /etc/traefik/ssl/key.key
+#       stores:
+#         - default
+
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/traefik/ssl/cert.crt
+        keyFile: /etc/traefik/ssl/key.key
