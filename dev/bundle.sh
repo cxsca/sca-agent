@@ -8,7 +8,7 @@ docker run --rm -v "${PWD}":/sca-agent -w /sca-agent aweponken/alpine-zip zip -r
   README.md \
   setup.sh \
   show-scans-status.sh \
-  .env.template \
+  .env.defaults \
   docker-compose.yml \
   volumes \
   logs \

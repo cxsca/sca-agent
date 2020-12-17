@@ -1,9 +1,9 @@
 #!/bin/sh
 
-echo "Copying .env file..."
+echo "Initializing .env file..."
 
-if test -f ".env"; then
-  mv .env.template .env
+if test ! -f ".env"; then
+  cp .env.defaults .env
 fi
 
 echo "Pulling docker images..."
