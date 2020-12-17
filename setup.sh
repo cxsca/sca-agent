@@ -1,5 +1,11 @@
 #!/bin/sh
 
+echo "Copying .env file..."
+
+if test -f ".env"; then
+  mv .env.template .env
+fi
+
 echo "Pulling docker images..."
 
 docker --version
