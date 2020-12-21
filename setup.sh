@@ -1,5 +1,11 @@
 #!/bin/sh
 
+echo "Initializing .env file..."
+
+if test ! -f ".env"; then
+  cp .env.defaults .env
+fi
+
 echo "Pulling docker images..."
 
 docker --version

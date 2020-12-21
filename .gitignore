@@ -1,15 +1,10 @@
 # IDEs
 .vscode
 .idea
-
-# Logs
-logs
-
-# Zips
-*.zip
-
-# macOS
 .DS_Store
 
-# Bundle
+# Auto Generated
+logs
+*.zip
 VERSION
+.env
