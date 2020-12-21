@@ -7,6 +7,8 @@ services:
       - ACCESS_CONTROL_PROTOCOL
       - ACCESS_CONTROL_HOST
       - SCA_API_PROTOCOL
+      - TRAEFIK_PROVIDERS_CONSULCATALOG_ENDPOINT_TLS_CERT
+      - TRAEFIK_PROVIDERS_CONSULCATALOG_ENDPOINT_TLS_KEY
       - SCA_API_HOST
       - HTTPS_PROXY
       - NO_PROXY
@@ -14,6 +16,7 @@ services:
     ports:
       - "${EXTERNAL_PORT}:80"
       - "${TRAEFIK_DASHBOARD_PORT}:8080"
+      - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./volumes/traefik/http:/dynamic/http
