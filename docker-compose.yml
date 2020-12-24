@@ -15,9 +15,8 @@ services:
       - NO_PROXY
     command: --configFile $${CONFIG_LOCATION}
     ports:
-      - "${EXTERNAL_PORT}:80"
+      - "${EXTERNAL_PORT}:${EXTERNAL_PORT}"
       - "${TRAEFIK_DASHBOARD_PORT}:8080"
-      - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./volumes/traefik/http:/dynamic/http
