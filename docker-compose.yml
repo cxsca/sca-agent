@@ -4,6 +4,7 @@ services:
   reverse-proxy:
     image: traefik:v2.3
     environment:
+      - CONFIG_LOCATION=/dynamic/${TRANSFER_PROTOCOL}/traefik.toml
       - ACCESS_CONTROL_PROTOCOL
       - ACCESS_CONTROL_HOST
       - SCA_API_PROTOCOL
@@ -80,9 +81,9 @@ services:
     command: server /data
     labels:
       traefik.enable: "true"
+      traefik.http.routers.minio.tls: ${TLS}
       traefik.http.routers.minio.rule: PathPrefix(`/minio`) || PathPrefix(`/uploads`)
       traefik.http.services.minio.loadbalancer.server.port: 9000
-      traefik.http.routers.minio.tls: ${TLS}
     networks:
       - sca-agent
     logging:
