@@ -10,4 +10,6 @@ VERSION
 .env
 
 # Configurations
-/volumes/traefik/ssl
+/volumes/traefik/ssl/*
+!volumes/traefik/ssl/rename_to-cert.crt
+!volumes/traefik/ssl/rename_to-key.key
