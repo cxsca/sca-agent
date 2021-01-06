@@ -1,0 +1,19 @@
+cx-flow:
+  enabled-vulnerability-scanners:
+    - sca
+sca:
+  appUrl: https://sca.scacheckmarx.com
+  apiUrl: https://api.scacheckmarx.com
+  accessControlUrl: https://platform.checkmarx.net
+  tenant: your tenant name
+  username: userxx
+  password: pasxx
+
+github:
+  webhook-token: XXX
+  token: XXXX
+  url: https://github.com/repos
+  api-url: https://api.github.com/repos/
+  false-positive-label: false-positive
+  block-merge: true
+  detailed: false
