@@ -1,6 +1,12 @@
 cx-flow:
   enabled-vulnerability-scanners:
     - sca
+  branches:
+    - develop
+    - master
+    - security
+    - main
+    - test
 sca:
   appUrl: https://sca.scacheckmarx.com
   apiUrl: https://api.scacheckmarx.com
@@ -8,12 +14,15 @@ sca:
   tenant: your tenant name
   username: userxx
   password: pasxx
-
 github:
-  webhook-token: XXX
+  webhook-token: XXXX
   token: XXXX
-  url: https://github.com/repos
+  url: https://github.com
   api-url: https://api.github.com/repos/
   false-positive-label: false-positive
+  config-as-code:
   block-merge: true
   detailed: false
+  error-merge: true
+  cx-summary: false
+  flow-summary: true
