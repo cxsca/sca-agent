@@ -12,17 +12,14 @@ The SCA Agent is an hybrid on-prem solution for Checkmarx SCA. The agent resolve
 ## Setup
 
 1. Install the latest versions of [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/).
-2. Download and unzip the release
+2. Download and unzip the release, and run the setup script
     ```shell
     $ wget https://github.com/cxsca/sca-agent/releases/latest/download/sca-agent.zip
     $ unzip sca-agent.zip
+    $ chmod +x setup.sh && ./setup.sh
     ```
 3. Configure the `.env` file according to your needs. The `EXTERNAL_HOST` variable must match the DNS or the IP of the machine where the agent is installed.
-4. Execute the setup script:
-    ```shell
-    $ ./setup.sh
-    ``` 
-5. Start the agent:
+4. Start the agent:
     ```shell
     $ docker-compose up -d
     ```
