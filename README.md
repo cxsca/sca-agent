@@ -16,7 +16,7 @@ The SCA Agent is an hybrid on-prem solution for Checkmarx SCA. The agent resolve
     ```shell
     $ wget https://github.com/cxsca/sca-agent/releases/latest/download/sca-agent.zip
     $ unzip sca-agent.zip
-    $ chmod +x setup.sh && ./setup.sh
+    $ cd sca-agent && chmod +x setup.sh && ./setup.sh
     ```
 3. Configure the `.env` file according to your needs. The `EXTERNAL_HOST` variable must match the DNS or the IP of the machine where the agent is installed.
 4. Start the agent:
