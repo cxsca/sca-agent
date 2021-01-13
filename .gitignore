@@ -9,7 +9,6 @@ logs
 VERSION
 .env
 
-# Configurations
+# traefik
 /volumes/traefik/ssl/*
-!volumes/traefik/ssl/rename_to-cert.crt
-!volumes/traefik/ssl/rename_to-key.key
+!volumes/traefik/ssl/README.md
