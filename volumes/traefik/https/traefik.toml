@@ -4,9 +4,6 @@ defaultEntryPoints = ["https"]
 [entryPoints.https]
 address = ":443"
 
-[api]
-insecure = true
-
 [providers.docker]
 exposedbydefault = false
 
