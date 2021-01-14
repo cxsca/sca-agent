@@ -193,7 +193,27 @@ services:
       interval: 2s
       timeout: 20s
       retries: 30
-
+  ########################################################################
+  cx-flow:
+    image: checkmarx/cx-flow:cfdcabb
+    restart: always
+    command: --web --spring.config.location=/app/application.yml
+    volumes:
+      - ./volumes/cx-flow/application.yml:/app/application.yml
+    environment:
+      AGENT_INTERNAL_URL: http://reverse-proxy
+      SCA_TENANT: ${SCA_TENANT}
+      SCA_USERNAME: ${SCA_USERNAME}
+      SCA_PASSWORD: ${SCA_PASSWORD}
+      GITHUB_WEBHOOK_TOKEN: ${ GITHUB_WEBHOOK_TOKEN }
+      WEBHOOK_SECRET: ${ WEBHOOK_SECRET }
+    depends_on:
+      - fluentbit
+      - minio
+      - reverse-proxy
+      - scan-runner
+    networks:
+      - sca-agent
   ########################################################################
 volumes:
   minio_data:

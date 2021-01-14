@@ -6,17 +6,17 @@ cx-flow:
     - master
     - security
     - main
-    - test
 sca:
-  appUrl: https://sca.scacheckmarx.com
-  apiUrl: https://api.scacheckmarx.com
-  accessControlUrl: https://platform.checkmarx.net
-  tenant: your tenant name
-  username: userxx
-  password: pasxx
+  appUrl: ${ AGENT_INTERNAL_URL }
+  apiUrl: ${ AGENT_INTERNAL_URL }
+  accessControlUrl: ${ AGENT_INTERNAL_URL }
+  tenant: ${ SCA_TENANT }
+  username: ${ SCA_USERNAME }
+  password: ${ SCA_PASSWORD }
+
 github:
-  webhook-token: XXXX
-  token: XXXX
+  webhook-token: ${ WEBHOOK_TOKEN }
+  token: ${ TOKEN }
   url: https://github.com
   api-url: https://api.github.com/repos/
   false-positive-label: false-positive
