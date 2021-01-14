@@ -1,17 +1,14 @@
-defaultEntryPoints = ["http", "https"]
+defaultEntryPoints = ["https"]
 
 [entryPoints]
-[entryPoints.http]
-address = ":80"
-
-[api]
-insecure = true
+[entryPoints.https]
+address = ":443"
 
 [providers.docker]
 exposedbydefault = false
 
 [providers.file]
-directory = "/dynamic"
+directory = "/dynamic/https"
 
 [docker]
 domain = "sca-agent"

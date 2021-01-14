@@ -3,8 +3,12 @@
 .idea
 .DS_Store
 
-# Auto Generated
+# Bundle
 logs
 *.zip
 VERSION
 .env
+
+# traefik
+/volumes/traefik/ssl/*
+!volumes/traefik/ssl/README.md

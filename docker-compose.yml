@@ -4,19 +4,22 @@ services:
   reverse-proxy:
     image: traefik:v2.3
     environment:
+      - CONFIG_LOCATION=/dynamic/${TRANSFER_PROTOCOL}/traefik.toml
       - ACCESS_CONTROL_PROTOCOL
       - ACCESS_CONTROL_HOST
       - SCA_API_PROTOCOL
       - SCA_API_HOST
       - HTTPS_PROXY
       - NO_PROXY
+    command: --configFile $${CONFIG_LOCATION}
     ports:
-      - "${EXTERNAL_PORT}:80"
-      - "${TRAEFIK_DASHBOARD_PORT}:8080"
+      - "${EXTERNAL_PORT}:${TRAEFIK_PORT}"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./volumes/traefik/traefik.toml:/etc/traefik/traefik.toml
-      - ./volumes/traefik/traefik-dynamic.yml:/dynamic/traefik-dynamic.yml
+      - ./volumes/traefik/http:/dynamic/http
+      - ./volumes/traefik/https:/dynamic/https
+      - ./volumes/traefik/ssl/cert.crt:/etc/traefik/ssl/cert.crt
+      - ./volumes/traefik/ssl/key.key:/etc/traefik/ssl/key.key
     logging:
       driver: "fluentd"
       options:
@@ -74,6 +77,7 @@ services:
     command: server /data
     labels:
       traefik.enable: "true"
+      traefik.http.routers.minio.tls: ${TLS}
       traefik.http.routers.minio.rule: PathPrefix(`/minio`) || PathPrefix(`/uploads`)
       traefik.http.services.minio.loadbalancer.server.port: 9000
     networks:
@@ -134,6 +138,7 @@ services:
       SCA_API_URL: ${SCA_API_PROTOCOL}://${SCA_API_HOST}
       SOURCERESOLVERAPI: http://source-resolver
       EXECUTIONMODE: sca-agent
+      SCA_AGENT_VERSION: ${AGENT_VERSION}
       HTTPS_PROXY:
       NO_PROXY:
     labels:
@@ -142,6 +147,7 @@ services:
       traefik.http.services.scan-runner.loadbalancer.server.port: 80
       traefik.http.middlewares.scan-runner-strip.stripprefix.prefixes: /api
       traefik.http.routers.scan-runner.middlewares: scan-runner-strip
+      traefik.http.routers.scan-runner.tls: ${TLS}
     logging:
       driver: "fluentd"
       options:
