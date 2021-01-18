@@ -1,4 +1,8 @@
+server:
+  port: 80
+
 cx-flow:
+  bug-tracker: None
   enabled-vulnerability-scanners:
     - sca
   branches:
@@ -6,23 +10,26 @@ cx-flow:
     - master
     - security
     - main
+  filter-severity:
+    - High
+    - Medium
+
 sca:
-  appUrl: ${ AGENT_INTERNAL_URL }
-  apiUrl: ${ AGENT_INTERNAL_URL }
-  accessControlUrl: ${ AGENT_INTERNAL_URL }
-  tenant: ${ SCA_TENANT }
-  username: ${ SCA_USERNAME }
-  password: ${ SCA_PASSWORD }
+  appUrl: ${AGENT_INTERNAL_URL}
+  apiUrl: ${AGENT_INTERNAL_URL}
+  accessControlUrl: ${AGENT_INTERNAL_URL}
+  tenant: ${SCA_TENANT}
+  username: ${SCA_USERNAME}
+  password: ${SCA_PASSWORD}
 
 github:
-  webhook-token: ${ WEBHOOK_TOKEN }
-  token: ${ TOKEN }
+  webhook-token: ${WEBHOOK_SECRET}
+  token: ${WEBHOOK_TOKEN}
   url: https://github.com
   api-url: https://api.github.com/repos/
   false-positive-label: false-positive
-  config-as-code:
   block-merge: true
-  detailed: false
+  config-as-code:
   error-merge: true
   cx-summary: false
   flow-summary: true
