@@ -214,6 +214,11 @@ services:
       traefik.http.middlewares.cx-flow-strip.stripprefix.prefixes: /webhook
       traefik.http.routers.cx-flow.middlewares: cx-flow-strip
       traefik.http.routers.cx-flow.tls: ${TLS}
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: tag-lumo-cxflow
     depends_on:
       - fluentbit
       - minio
