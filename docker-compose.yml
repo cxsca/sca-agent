@@ -122,7 +122,7 @@ services:
       - sca-agent
   ########################################################################
   scan-runner:
-    image: cxsca/scan-runner:2020.12.15.0057-f12e8c4
+    image: cxsca/scan-runner:2021.01.24.1545-8e4f89d
     restart: always
     environment:
       PRETTY: ${PRETTY_LOG}
@@ -165,7 +165,7 @@ services:
       retries: 30
   ########################################################################
   source-resolver:
-    image: cxsca/source-resolver:2020.12.14.2302-16996a4
+    image: cxsca/source-resolver:2021.01.20.1422-985f6b3
     restart: always
     environment:
       ENABLESTDOUT: "true"
