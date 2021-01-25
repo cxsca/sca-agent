@@ -16,6 +16,15 @@ pipeline {
             VERSION = pipelineUtils.getSemanticVersion(0, 2)
     }
     stages{
+        stage("Bundle") {
+            steps {
+                script{
+                    scaAgentZip = "sca-agent.${VERSION}.zip"
+                    sh(label: "Create bundle", script: "sh dev/bundle.sh ${scaAgentZip}")
+                    archiveArtifacts artifacts: scaAgentZip
+                }
+            }
+        }
         stage('Run E2E') {
             steps {
                 script{
@@ -35,15 +44,6 @@ pipeline {
                         sh("\$(aws ecr get-login --no-include-email --region eu-central-1)")
                         sh(label: "Run e2e", script: "sh dev/run-e2e.sh")
                     }
-                }
-            }
-        }
-        stage("Bundle") {
-            steps {
-                script{
-                    scaAgentZip = "sca-agent.${VERSION}.zip"
-                    sh(label: "Create bundle", script: "sh dev/bundle.sh ${scaAgentZip}")
-                    archiveArtifacts artifacts: scaAgentZip
                 }
             }
         }
