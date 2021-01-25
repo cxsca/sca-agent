@@ -3,6 +3,9 @@ library "pipelineUtils"
 def scaAgentZip
 
 pipeline {
+    parameters {
+        booleanParam(name: 'Release_New_Version', defaultValue: false, description: 'If "true", New release will occur in GitHub')
+    }
     agent {
         node {
             label 'docker'
@@ -44,6 +47,21 @@ pipeline {
                         sh("\$(aws ecr get-login --no-include-email --region eu-central-1)")
                         sh(label: "Run e2e", script: "sh dev/run-e2e.sh")
                     }
+                }
+            }
+        }
+        stage("Release") {
+            when {
+                expression {
+                    return params.Release_New_Version
+                }
+            }
+            steps {
+                script {
+                    scaAgentZipRelease = "sca-agent.zip"
+                    sh "cp ${WORKSPACE}/${scaAgentZip} ${WORKSPACE}/${scaAgentZipRelease}"
+                    archiveArtifacts artifacts: scaAgentZipRelease
+                    pipelineUtils.releaseNewVersion(VERSION, "${WORKSPACE}/${scaAgentZipRelease}")
                 }
             }
         }
