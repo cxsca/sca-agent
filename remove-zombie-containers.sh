@@ -8,7 +8,7 @@ read -n 1
 echo "Starting"
 ids=$(docker ps -a --no-trunc -f name=sca-agent* --format "{{.ID}}")
 
-# check if Linux or wsl/mingw by try run cmd.exe
+# check if Linux or wsl/mingw by try find cmd.exe
 cmd=$(command -v cmd.exe || echo shell)
 if [ "$cmd" != 'shell' ]; then
    echo "Creating zombie container with cmd to access MobyLinuxVM"
