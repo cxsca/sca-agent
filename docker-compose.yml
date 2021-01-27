@@ -193,7 +193,39 @@ services:
       interval: 2s
       timeout: 20s
       retries: 30
-
+  ########################################################################
+  cx-flow:
+    image: checkmarx/cx-flow:cfdcabb
+    restart: always
+    command: --web --spring.config.location=/app/application.yml
+    volumes:
+      - ./volumes/cx-flow/application.yml:/app/application.yml
+    environment:
+      AGENT_INTERNAL_URL: http://reverse-proxy
+      SCA_TENANT: ${SCA_TENANT}
+      SCA_USERNAME: ${SCA_USERNAME}
+      SCA_PASSWORD: ${SCA_PASSWORD}
+      WEBHOOK_TOKEN: ${WEBHOOK_TOKEN}
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET}
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.cx-flow.rule: PathPrefix(`/webhook`)
+      traefik.http.services.cx-flow.loadbalancer.server.port: 80
+      traefik.http.middlewares.cx-flow-strip.stripprefix.prefixes: /webhook
+      traefik.http.routers.cx-flow.middlewares: cx-flow-strip
+      traefik.http.routers.cx-flow.tls: ${TLS}
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: tag-lumo-cxflow
+    depends_on:
+      - fluentbit
+      - minio
+      - reverse-proxy
+      - scan-runner
+    networks:
+      - sca-agent
   ########################################################################
 volumes:
   minio_data:
