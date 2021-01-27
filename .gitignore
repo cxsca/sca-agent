@@ -12,6 +12,3 @@ VERSION
 # traefik
 /volumes/traefik/ssl/*
 !volumes/traefik/ssl/README.md
-
-# cx flow
-/volumes/cx-flow/*
