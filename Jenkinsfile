@@ -4,7 +4,7 @@ def scaAgentZip
 
 pipeline {
     parameters {
-        booleanParam(name: 'Release_New_Version', defaultValue: false, description: 'If "true", New release will occur in GitHub')
+        booleanParam(name: 'releaseNewVersion', defaultValue: false, description: 'If "true", New release will occur in GitHub')
     }
     agent {
         node {
@@ -53,14 +53,13 @@ pipeline {
         stage("Release") {
             when {
                 expression {
-                    return params.Release_New_Version
+                    return params.releaseNewVersion
                 }
             }
             steps {
                 script {
                     scaAgentZipRelease = "sca-agent.zip"
                     sh "cp ${WORKSPACE}/${scaAgentZip} ${WORKSPACE}/${scaAgentZipRelease}"
-                    archiveArtifacts artifacts: scaAgentZipRelease
                     pipelineUtils.releaseNewVersion(VERSION, "${WORKSPACE}/${scaAgentZipRelease}")
                 }
             }
