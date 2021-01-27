@@ -3,6 +3,9 @@ library "pipelineUtils"
 def scaAgentZip
 
 pipeline {
+    parameters {
+        booleanParam(name: 'releaseNewVersion', defaultValue: false, description: 'If "true", New release will occur in GitHub')
+    }
     agent {
         node {
             label 'docker'
@@ -16,6 +19,15 @@ pipeline {
             VERSION = pipelineUtils.getSemanticVersion(0, 2)
     }
     stages{
+        stage("Bundle") {
+            steps {
+                script{
+                    scaAgentZip = "sca-agent.${VERSION}.zip"
+                    sh(label: "Create bundle", script: "sh dev/bundle.sh ${scaAgentZip}")
+                    archiveArtifacts artifacts: scaAgentZip
+                }
+            }
+        }
         stage('Run E2E') {
             steps {
                 script{
@@ -38,12 +50,17 @@ pipeline {
                 }
             }
         }
-        stage("Bundle") {
+        stage("Release") {
+            when {
+                expression {
+                    return params.releaseNewVersion
+                }
+            }
             steps {
-                script{
-                    scaAgentZip = "sca-agent.${VERSION}.zip"
-                    sh(label: "Create bundle", script: "sh dev/bundle.sh ${scaAgentZip}")
-                    archiveArtifacts artifacts: scaAgentZip
+                script {
+                    scaAgentZipRelease = "sca-agent.zip"
+                    sh "cp ${WORKSPACE}/${scaAgentZip} ${WORKSPACE}/${scaAgentZipRelease}"
+                    pipelineUtils.releaseNewVersion(VERSION, "${WORKSPACE}/${scaAgentZipRelease}")
                 }
             }
         }
