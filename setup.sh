@@ -4,6 +4,7 @@ echo "Initializing .env file..."
 
 if test ! -f ".env"; then
   cp .env.defaults .env
+  sed -i "s/{GenKey()}/$(openssl rand -hex 12)/g" .env
 fi
 
 echo "Pulling docker images..."
