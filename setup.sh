@@ -1,10 +1,12 @@
 #!/bin/sh
 
+. ./scripts/genkeys.sh --source-only
+
 echo "Initializing .env file..."
 
 if test ! -f ".env"; then
   cp .env.defaults .env
-  sed -i "s/{GenKey()}/$(openssl rand -hex 12)/g" .env
+  genkeys .env
 fi
 
 echo "Pulling docker images..."
