@@ -1,15 +1,17 @@
 #!/bin/sh
 
-echo "Initializing .env file..."
-
-if test ! -f ".env"; then
-  cp .env.defaults .env
-fi
-
-echo "Pulling docker images..."
+echo "Checking docker version..."
 
 docker --version
 docker-compose --version
+
+echo "Initializing .env file..."
+
+if test ! -f ".env"; then
+  docker run --rm -v "${PWD}":/sca-agent -w /sca-agent python:slim python create_env_file.py
+fi
+
+echo "Pulling docker images..."
 
 docker-compose pull
 
