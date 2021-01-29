@@ -3,10 +3,7 @@
 echo "Initializing .env file..."
 
 if test ! -f ".env"; then
-  cp .env.defaults .env
-
-  placeHolder="{GenKey()}"
-  for str in $(grep ${placeHolder} .env); do sed -i "s/${placeHolder}/$(openssl rand -hex 12)/" .env; done
+  docker run --rm -v "${PWD}":/sca-agent -w /sca-agent python:slim ./create-environment.py
 fi
 
 echo "Pulling docker images..."
