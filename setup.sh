@@ -3,7 +3,7 @@
 echo "Initializing .env file..."
 
 if test ! -f ".env"; then
-  docker run --rm -v "${PWD}":/sca-agent -w /sca-agent python:slim ./create-environment.py
+  docker run --rm -v "${PWD}":/sca-agent -w /sca-agent python:slim python create-environment.py
 fi
 
 echo "Pulling docker images..."
