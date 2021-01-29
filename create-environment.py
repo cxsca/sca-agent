@@ -11,8 +11,6 @@ def get_random_hex_string():
 
 
 placeHolder = "{GenKey()}"
-txtInput = sys.stdin
-txtOutput = sys.stdout
 txtInput = open(".env.defaults")
 txtOutput = open(".env", 'w')
 
