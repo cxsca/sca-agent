@@ -9,14 +9,14 @@ def get_random_hex_string():
     return ''.join(random.choice(string.hexdigits) for i in range(12))
 
 
-placeHolder = "%AUTO_GENERATED_PASSWORD%"
-txtInput = open(".env.defaults")
-txtOutput = open(".env", 'w')
+placeholder = "%AUTO_GENERATED_PASSWORD%"
+input_file = open(".env.defaults")
+output_file = open(".env", 'w')
 
-for envLine in txtInput.readlines():
-    for match_position in [match.start() for match in re.finditer(re.escape(placeHolder), envLine)]:
-        envLine = envLine.replace(placeHolder, get_random_hex_string(), 1)
-    txtOutput.write(envLine)
+for envLine in input_file.readlines():
+    for match_position in [match.start() for match in re.finditer(re.escape(placeholder), envLine)]:
+        envLine = envLine.replace(placeholder, get_random_hex_string(), 1)
+    output_file.write(envLine)
 
-txtOutput.close()
-txtInput.close()
+output_file.close()
+input_file.close()
