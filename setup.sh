@@ -1,5 +1,10 @@
 #!/bin/sh
 
+echo "Checking docker version..."
+
+docker --version
+docker-compose --version
+
 echo "Initializing .env file..."
 
 if test ! -f ".env"; then
@@ -7,9 +12,6 @@ if test ! -f ".env"; then
 fi
 
 echo "Pulling docker images..."
-
-docker --version
-docker-compose --version
 
 docker-compose pull
 
