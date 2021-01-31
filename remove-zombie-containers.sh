@@ -26,13 +26,20 @@ done
 echo "Removing following containers:"
 docker ps --no-trunc -f name=sca-agent* --format "table {{.ID}}\t{{.Names}}" || exit
 echo "-------------------------------------------"
+
+ids=$(docker ps --no-trunc -f name=sca-agent* --format "{{.ID}}")
+c=$(echo -n "ids" | wc -l)
+if [ $c -eq 0 ]; then
+ echo "No zombie containers to delete"
+ exit 0
+fi
+
 if [ $SILENCE -eq 0 ]; then
    echo "Press any key to continue..."
    read -n 1
 fi
 
 echo "Starting"
-ids=$(docker ps --no-trunc -f name=sca-agent* --format "{{.ID}}")
 
 # check if Linux or wsl/mingw by try find cmd.exe
 cmd=$(command -v cmd.exe || echo shell)
