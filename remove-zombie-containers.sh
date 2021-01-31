@@ -1,12 +1,38 @@
 #!/bin/sh
 
+SILENCE=0
+for arg in "$@"
+do
+    case $arg in
+    -h|--help)
+        echo "Usage: show-scans-status [options]"
+        echo "options:"
+        echo "-h, --help               show this help message"
+        echo "-s, --silence            don't wait for approval to remove containers"
+        echo "examples:"
+        echo "Linux and MinGw distribution (gitbash, cygwin etc.)"
+        echo "  $ sh show-scans-status.sh"
+        echo "WSL2 ubuntu:"
+        echo "  $ /bin/bash show-scans-status.sh"
+        exit 0
+        ;;
+    -s|--silence)
+        SILENCE=1
+        shift 
+        ;;
+    esac
+done
+
 echo "Removing following containers:"
-docker ps -a --no-trunc -f name=sca-agent* --format "table {{.ID}}\t{{.Names}}" || exit
+docker ps --no-trunc -f name=sca-agent* --format "table {{.ID}}\t{{.Names}}" || exit
 echo "-------------------------------------------"
-echo "Press any key to continue..."
-read -n 1
+if [ $SILENCE -eq 0 ]; then
+   echo "Press any key to continue..."
+   read -n 1
+fi
+
 echo "Starting"
-ids=$(docker ps -a --no-trunc -f name=sca-agent* --format "{{.ID}}")
+ids=$(docker ps --no-trunc -f name=sca-agent* --format "{{.ID}}")
 
 # check if Linux or wsl/mingw by try find cmd.exe
 cmd=$(command -v cmd.exe || echo shell)
