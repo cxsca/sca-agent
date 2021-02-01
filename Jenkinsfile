@@ -50,6 +50,14 @@ pipeline {
                 }
             }
         }
+        stage('Run Scenario Tests')
+        {
+            steps{
+                script{
+                    print("To be done")
+                }
+            }
+        }
         stage("Release") {
             when {
                 expression {
