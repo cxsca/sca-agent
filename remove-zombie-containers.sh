@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 SILENCE=0
 for arg in "$@"
