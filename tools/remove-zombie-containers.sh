@@ -23,16 +23,16 @@ do
     esac
 done
 
-echo "Removing following containers:"
-docker ps --no-trunc -f name=sca-agent* --format "table {{.ID}}\t{{.Names}}" || exit
-echo "-------------------------------------------"
-
 ids=$(docker ps --no-trunc -f name=sca-agent* --format "{{.ID}}\n")
 c=$(echo -n "$ids" | wc -l)
 if [ $c -eq 0 ]; then
  echo "No zombie containers to delete"
  exit 0
 fi
+
+echo "Removing following containers:"
+docker ps --no-trunc -f name=sca-agent* --format "table {{.ID}}\t{{.Names}}" || exit
+echo "-------------------------------------------"
 
 if [ $SILENCE -eq 0 ]; then
    echo "Press any key to continue..."
