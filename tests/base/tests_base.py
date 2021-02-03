@@ -32,8 +32,7 @@ class TestsBase:
         for asset_file in assets_to_copy:
             shutil.copy(os.path.join(self.BASE_FOLDER, asset_file), os.path.join(self.TEMP_DIR.name, asset_file))
 
-        os.system(f"cd {self.TEMP_DIR.name} | sed -i \"s/\\${{AGENT_VERSION}}/Test-Version/g\" docker-compose.yml | "
-                  f"chmod 400 docker-compose.yml")
+        os.system(f"cd {self.TEMP_DIR.name} | sed -i \"s/\\${{AGENT_VERSION}}/Test-Version/g\" docker-compose.yml")
 
     def agent_run(self):
         self._copy_assets()
@@ -41,7 +40,7 @@ class TestsBase:
         print("Setting up the agent")
 
         # Run setup
-        os.system(f"cd {self.TEMP_DIR.name} | chmod 400 setup.sh | ./setup.sh")
+        os.system(f"cd {self.TEMP_DIR.name} | ./setup.sh")
 
         # Run docker compose
         os.system(f"docker-compose -p {self.TEST_NAME} up -d")
