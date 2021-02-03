@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SILENCE=0
-for arg in "$@
+for arg in "$@"
 do
     case $arg in
     -h|--help)
