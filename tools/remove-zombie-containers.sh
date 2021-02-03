@@ -27,8 +27,8 @@ echo "Removing following containers:"
 docker ps --no-trunc -f name=sca-agent* --format "table {{.ID}}\t{{.Names}}" || exit
 echo "-------------------------------------------"
 
-ids=$(docker ps --no-trunc -f name=sca-agent* --format "{{.ID}}")
-c=$(echo -n "ids" | wc -l)
+ids=$(docker ps --no-trunc -f name=sca-agent* --format "{{.ID}}\n")
+c=$(echo -n "$ids" | wc -l)
 if [ $c -eq 0 ]; then
  echo "No zombie containers to delete"
  exit 0
@@ -45,7 +45,7 @@ echo "Starting"
 cmd=$(command -v cmd.exe || echo shell)
 if [ "$cmd" != 'shell' ]; then
    echo "Creating zombie container with cmd to access MobyLinuxVM"
-   cmd.exe /C "docker run --name zombie --net=host --ipc=host --uts=host --pid=host --security-opt=seccomp=unconfined --privileged -it -d -v /:/host alpine sh" || exit
+   cmd.exe /C "docker run --rm --name zombie --net=host --ipc=host --uts=host --pid=host --security-opt=seccomp=unconfined --privileged -it -d -v /:/host alpine sh" || exit
    removeCmd='cmd.exe /C "docker exec -i zombie rm -r /host/var/lib/docker/containers"'
 else
    removeCmd='rm -r /var/lib/docker/containers'
