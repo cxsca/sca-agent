@@ -10,6 +10,7 @@ services:
       - SCA_API_PROTOCOL
       - SCA_API_HOST
       - HTTPS_PROXY
+      - HTTP_PROXY
       - NO_PROXY
     command: --configFile $${CONFIG_LOCATION}
     ports:
@@ -48,6 +49,7 @@ services:
     environment:
       - LOG_FILES_EXPIRATION_IN_DAYS
       - HTTPS_PROXY
+      - HTTP_PROXY
       - NO_PROXY
     entrypoint: ["/bin/sh", "/sca-agent/scripts/clean-old-log-files.sh"]
     logging:
@@ -73,6 +75,7 @@ services:
       MINIO_SECRET_KEY: ${MINIO_SECRET_ACCESS_KEY}
       MINIO_REGION_NAME: ${MINIO_REGION}
       HTTPS_PROXY:
+      HTTP_PROXY:
       NO_PROXY:
     command: server /data
     labels:
@@ -105,6 +108,7 @@ services:
       - UPLOADS_BUCKET
       - BUCKET_EXPIRATION_IN_DAYS
       - HTTPS_PROXY
+      - HTTP_PROXY
       - NO_PROXY
     depends_on:
       - fluentbit
@@ -140,6 +144,7 @@ services:
       EXECUTIONMODE: sca-agent
       SCA_AGENT_VERSION: ${AGENT_VERSION}
       HTTPS_PROXY:
+      HTTP_PROXY:
       NO_PROXY:
     labels:
       traefik.enable: "true"
@@ -177,6 +182,7 @@ services:
       LOGEVENTLEVEL: Information
       VERSION: SCA-Agent-0.1
       HTTPS_PROXY:
+      HTTP_PROXY:
       NO_PROXY:
     logging:
       driver: "fluentd"
