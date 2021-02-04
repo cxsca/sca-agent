@@ -31,25 +31,24 @@ pipeline {
         stage('Run E2E') {
             steps {
                 script{
-                    currentBuild.displayName = VERSION
-                    e2eSecrets = pipelineUtils.getSCAAgentParams()
-                    withEnv([
-                        "JENKINS_NODE_COOKIE=dontkillMe",
-                        "AUTHENTICATIONTOKENSOURCE=" + e2eSecrets.resource,
-                        "SCOPE=" + e2eSecrets.scope,
-                        "GRANT_TYPE=" + e2eSecrets.grantType,
-                        "ACCESSCONTROLCLIENTID=" + e2eSecrets.clientId,
-                        "SCATENANT=" + e2eSecrets.tenant,
-                        "SCAUSERNAME=" + e2eSecrets.username,
-                        "SCAPASSWORDSECRET=" + e2eSecrets.password,
-                        "E2E_IMAGE_URL=" + e2eSecrets.e2eImageUrl]) {
-                        sh """
-                          mkdir agent && cd agent
-                          unzip ${WORKSPACE}/${scaAgentZip}
-                          chmod +x setup.sh && ./setup.sh
-                          \$(aws ecr get-login --no-include-email --region eu-central-1)
-                          cp ../dev . && ../dev/run-e2e.sh
-                        """
+                    dir("setup") {
+                        currentBuild.displayName = VERSION
+                        sh(label: "Setup bundle",
+                           script: "unzip ${WORKSPACE}/${scaAgentZip} && chmod +x setup.sh && ./setup.sh")
+                        e2eSecrets = pipelineUtils.getSCAAgentParams()
+                        withEnv([
+                            "JENKINS_NODE_COOKIE=dontkillMe",
+                            "AUTHENTICATIONTOKENSOURCE=" + e2eSecrets.resource,
+                            "SCOPE=" + e2eSecrets.scope,
+                            "GRANT_TYPE=" + e2eSecrets.grantType,
+                            "ACCESSCONTROLCLIENTID=" + e2eSecrets.clientId,
+                            "SCATENANT=" + e2eSecrets.tenant,
+                            "SCAUSERNAME=" + e2eSecrets.username,
+                            "SCAPASSWORDSECRET=" + e2eSecrets.password,
+                            "E2E_IMAGE_URL=" + e2eSecrets.e2eImageUrl]) {
+                            sh(label: "Login to ECR", script: "\$(aws ecr get-login --no-include-email --region eu-central-1)")
+                            sh(label: "Run E2E", script: "cp -r ../dev . && ../dev/run-e2e.sh")
+                        }
                     }
                 }
             }
