@@ -43,13 +43,13 @@ pipeline {
                         "SCAUSERNAME=" + e2eSecrets.username,
                         "SCAPASSWORDSECRET=" + e2eSecrets.password,
                         "E2E_IMAGE_URL=" + e2eSecrets.e2eImageUrl]) {
-                        sh '''
+                        sh """
                           mkdir agent && cd agent
                           unzip ${WORKSPACE}/${scaAgentZip}
                           chmod +x setup.sh && ./setup.sh
                           \$(aws ecr get-login --no-include-email --region eu-central-1)
                           cp ../dev . && ../dev/run-e2e.sh
-                        '''
+                        """
                     }
                 }
             }
