@@ -45,7 +45,7 @@ pipeline {
                         "E2E_IMAGE_URL=" + e2eSecrets.e2eImageUrl]) {
                         sh '''
                           mkdir agent && cd agent
-                          unzip ${WORKSPACE}/${scaAgentZipRelease}
+                          unzip ${WORKSPACE}/${scaAgentZip}
                           chmod +x setup.sh && ./setup.sh
                           \$(aws ecr get-login --no-include-email --region eu-central-1)
                           cp ../dev . && ../dev/run-e2e.sh
