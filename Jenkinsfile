@@ -4,7 +4,7 @@ def scaAgentZip
 
 pipeline {
     parameters {
-        booleanParam(name: 'releaseNewVersion', defaultValue: false, description: 'If "true", New release will occur in GitHub')
+        booleanParam(name: 'releaseNewVersion', defaultValue: false, description: 'Create a public GitHub release')
     }
     agent {
         node {
@@ -23,18 +23,17 @@ pipeline {
             steps {
                 script{
                     scaAgentZip = "sca-agent.${VERSION}.zip"
-                    sh(label: "Create bundle", script: "sh dev/bundle.sh ${scaAgentZip}")
+                    sh label: "Create bundle", script: "sh dev/bundle.sh ${scaAgentZip}"
                     archiveArtifacts artifacts: scaAgentZip
                 }
             }
         }
-        stage('Run E2E') {
+        stage('Test') {
             steps {
                 script{
                     dir("setup") {
                         currentBuild.displayName = VERSION
-                        sh(label: "Setup bundle",
-                           script: "unzip ${WORKSPACE}/${scaAgentZip} && sh ./setup.sh")
+                        sh label: "Install the agent", script: "unzip ${WORKSPACE}/${scaAgentZip} && sh ./setup.sh"
                         e2eSecrets = pipelineUtils.getSCAAgentParams()
                         withEnv([
                             "JENKINS_NODE_COOKIE=dontkillMe",
@@ -46,8 +45,8 @@ pipeline {
                             "SCAUSERNAME=" + e2eSecrets.username,
                             "SCAPASSWORDSECRET=" + e2eSecrets.password,
                             "E2E_IMAGE_URL=" + e2eSecrets.e2eImageUrl]) {
-                            sh(label: "Login to ECR", script: "\$(aws ecr get-login --no-include-email --region eu-central-1)")
-                            sh(label: "Run E2E", script: "cp -r ../dev . && sh dev/run-e2e.sh")
+                            sh label: "Login to ECR", script: "\$(aws ecr get-login --no-include-email --region eu-central-1)"
+                            sh label: "Run E2E", script: "cp -r ../dev . && sh dev/run-e2e.sh"
                         }
                     }
                 }
