@@ -34,7 +34,7 @@ pipeline {
                     dir("setup") {
                         currentBuild.displayName = VERSION
                         sh(label: "Setup bundle",
-                           script: "unzip ${WORKSPACE}/${scaAgentZip} && chmod +x setup.sh && ./setup.sh")
+                           script: "unzip ${WORKSPACE}/${scaAgentZip} && sh ./setup.sh")
                         e2eSecrets = pipelineUtils.getSCAAgentParams()
                         withEnv([
                             "JENKINS_NODE_COOKIE=dontkillMe",
@@ -47,7 +47,7 @@ pipeline {
                             "SCAPASSWORDSECRET=" + e2eSecrets.password,
                             "E2E_IMAGE_URL=" + e2eSecrets.e2eImageUrl]) {
                             sh(label: "Login to ECR", script: "\$(aws ecr get-login --no-include-email --region eu-central-1)")
-                            sh(label: "Run E2E", script: "cp -r ../dev . && chmod +x dev/run-e2e.sh && dev/run-e2e.sh")
+                            sh(label: "Run E2E", script: "cp -r ../dev . && sh dev/run-e2e.sh")
                         }
                     }
                 }
