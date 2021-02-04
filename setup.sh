@@ -8,7 +8,7 @@ docker-compose --version
 echo "Initializing .env file..."
 
 if test ! -f ".env"; then
-  docker run --rm -v "${PWD}":/sca-agent -w /sca-agent python:slim python create_env_file.py
+  docker run --rm -v "${PWD}":/sca-agent -w /sca-agent python:slim python tools/create_env_file.py
 fi
 
 echo "Pulling docker images..."

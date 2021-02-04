@@ -138,7 +138,7 @@ services:
       SCA_API_URL: ${SCA_API_PROTOCOL}://${SCA_API_HOST}
       SOURCERESOLVERAPI: http://source-resolver
       EXECUTIONMODE: sca-agent
-      SCA_AGENT_VERSION: ${AGENT_VERSION}
+      SCA_AGENT_VERSION: Unknown
       HTTPS_PROXY:
       NO_PROXY:
     labels:
