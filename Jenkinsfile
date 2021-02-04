@@ -16,7 +16,7 @@ pipeline {
         disableConcurrentBuilds()
     }
     environment {
-            VERSION = pipelineUtils.getSemanticVersion(0, 2)
+            VERSION = pipelineUtils.getSemanticVersion(0, 3)
     }
     stages{
         stage("Bundle") {
