@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+  heath-test:
+    image: {IMAGE_NAME}  #agent-health-check
+    build:
+      context: ./tests/health/src
+      dockerfile: Dockerfile
+    networks:
+      - sca-agent
+    depends_on:
+      - reverse-proxy
+      - scan-runner
+      - reverse-proxy
