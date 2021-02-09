@@ -71,18 +71,17 @@ pipeline {
                         def files = findFiles(glob: '**/docker-compose*.yml')
 
                         files.each {
-                            testName = it.path.split('/')[0]
-//                           testingScenarios["test-${testNumber}"] = {
-//                                node("docker"){
-//                                    sh("docker-compose -f docker-compose.yml -f ${it.path} up --abort-on-container-exit")
-//                                }
-//                            }
-                            testingScenarios["test-${testName}"] = "${WORKSPACE}/tests/{it.path}"
+                           testName = it.path.split('/')[0]
+                           testingScenarios["test-${testName}"] = {
+                                node("docker"){
+                                    sh("docker-compose -f docker-compose.yml -f ${WORKSPACE}/tests/${it.path} up --abort-on-container-exit")
+                                }
+                            }
                         }
                     }
 
-                   testingScenarios.each { print("${it.key} : ${it.value}") }
-                    //parallel testingScenarios
+                   //testingScenarios.each { print("${it.key} : ${it.value}") }
+                   parallel testingScenarios
                 }
             }
         }
