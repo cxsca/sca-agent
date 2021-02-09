@@ -68,17 +68,16 @@ pipeline {
                     def testingScenarios = [:]
                     dir("tests"){
 
-                        def testNumber = 0
                         def files = findFiles(glob: '**/docker-compose*.yml')
 
                         files.each {
+                            testName = it.path.Split('/')[0]
 //                           testingScenarios["test-${testNumber}"] = {
 //                                node("docker"){
 //                                    sh("docker-compose -f docker-compose.yml -f ${it.path} up --abort-on-container-exit")
 //                                }
 //                            }
-                            testingScenarios["test-${testNumber}"] = it.path
-                            testNumber++
+                            testingScenarios["test-${testName}"] = "${WORKDIR}/tests/{it.path}"
                         }
                     }
 
