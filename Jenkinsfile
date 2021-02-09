@@ -74,13 +74,12 @@ pipeline {
                            testName = it.path.split('/')[0]
                            testingScenarios["test-${testName}"] = {
                                 node("docker"){
-                                    sh("docker-compose -f docker-compose.yml -f ${WORKSPACE}/tests/${it.path} up --abort-on-container-exit")
+                                    sh("docker-compose -f ${WORKSPACE}/docker-compose.yml -f ${WORKSPACE}/tests/${it.path} up --abort-on-container-exit")
                                 }
                             }
                         }
                     }
 
-                   //testingScenarios.each { print("${it.key} : ${it.value}") }
                    parallel testingScenarios
                 }
             }
