@@ -65,25 +65,24 @@ pipeline {
             steps{
                 script{
 
-                    //def testingScenarios = [:]
+                    def testingScenarios = [:]
+                    dir("tests"){
 
-                    def files = findFiles(glob: '**/docker-compose*.yml')
-                    files.each {
-                        print("${it.name} : ${it.path.getParentFile().getName()}")
-                    }
-                    //String currentDir = new File("tests").getAbsolutePath()
-                    //File fileDir = new File(currentDir)
+                        def testNumber = 0
+                        def files = findFiles(glob: '**/docker-compose*.yml')
 
-//                    fileDir.eachDirRecurse(){dir ->
-//                        dir.eachFileMatch(~/docker-compose*.yml/){testComposeFile ->
-//                            testingScenarios["test-${testComposeFile.getParentFile().getName()}"] = {
+                        files.each {
+//                           testingScenarios["test-${testNumber}"] = {
 //                                node("docker"){
-//                                    sh("docker-compose -f docker-compose.yml -f ${testComposeFile.path} up --abort-on-container-exit")
+//                                    sh("docker-compose -f docker-compose.yml -f ${it.path} up --abort-on-container-exit")
 //                                }
 //                            }
-//                        }
-//                    }
+                            testingScenarios["test-${testNumber}"] = it.path
+                            testNumber++
+                        }
+                    }
 
+                   testingScenarios.each { print("${it.key} : ${it.value}") }
                     //parallel testingScenarios
                 }
             }
