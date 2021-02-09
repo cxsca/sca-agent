@@ -66,6 +66,7 @@ pipeline {
                 script{
 
                     def testingScenarios = [:]
+
                     dir("tests"){
 
                         def files = findFiles(glob: '**/docker-compose*.yml')
