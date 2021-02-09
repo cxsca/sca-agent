@@ -20,6 +20,11 @@ pipeline {
     }
     stages{
         stage("Bundle") {
+            when {
+                expression {
+                    return false
+                }
+            }
             steps {
                 script{
                     scaAgentZip = "sca-agent.${VERSION}.zip"
@@ -29,6 +34,11 @@ pipeline {
             }
         }
         stage('Run E2E') {
+            when {
+                expression {
+                    return false
+                }
+            }
             steps {
                 script{
                     currentBuild.displayName = VERSION
@@ -57,18 +67,20 @@ pipeline {
 
                     def testingScenarios = [:]
 
-                    String currentDir = new File("tests").getAbsolutePath()
-                    File fileDir = new File(currentDir)
+                    def files = findFiles(glob: '**/docker-compose*.yml')
+                    files.each(it -> print(it.name + " : " it.directory))
+                    //String currentDir = new File("tests").getAbsolutePath()
+                    //File fileDir = new File(currentDir)
 
-                    fileDir.eachDirRecurse(){dir ->
-                        dir.eachFileMatch(~/docker-compose*.yml/){testComposeFile ->
-                            testingScenarios["test-${testComposeFile.getParentFile().getName()}"] = {
-                                node("docker"){
-                                    sh("docker-compose -f docker-compose.yml -f ${testComposeFile.path} up --abort-on-container-exit")
-                                }
-                            }
-                        }
-                    }
+//                    fileDir.eachDirRecurse(){dir ->
+//                        dir.eachFileMatch(~/docker-compose*.yml/){testComposeFile ->
+//                            testingScenarios["test-${testComposeFile.getParentFile().getName()}"] = {
+//                                node("docker"){
+//                                    sh("docker-compose -f docker-compose.yml -f ${testComposeFile.path} up --abort-on-container-exit")
+//                                }
+//                            }
+//                        }
+//                    }
 
                     parallel testingScenarios
                 }
