@@ -75,7 +75,8 @@ pipeline {
                            testName = it.path.split('/')[0]
                            testingScenarios["test-${testName}"] = {
                                 node("docker"){
-                                    sh("docker-compose -f ${WORKSPACE}/sca-agent/docker-compose.yml -f ${WORKSPACE}/sca-agent/tests/${it.path} up --abort-on-container-exit")
+                                    //sh("docker-compose -f ${WORKSPACE}/sca-agent/docker-compose.yml -f ${WORKSPACE}/sca-agent/tests/${it.path} up --abort-on-container-exit")
+                                    sh("ls")
                                 }
                             }
                         }
