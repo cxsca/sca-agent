@@ -54,7 +54,23 @@ pipeline {
         {
             steps{
                 script{
-                    print("To be done")
+
+                    def testingScenarios = [:]
+
+                    String currentDir = new File("tests").getAbsolutePath()
+                    File fileDir = new File(currentDir)
+
+                    fileDir.eachDirRecurse(){dir ->
+                        dir.eachFileMatch(~/docker-compose*.yml/){testComposeFile ->
+                            testingScenarios["test-${testComposeFile.getParentFile().getName()}"] = {
+                                node("docker"){
+                                    sh("docker-compose -f docker-compose.yml -f ${testComposeFile.path} up --abort-on-container-exit")
+                                }
+                            }
+                        }
+                    }
+
+                    parallel testingScenarios
                 }
             }
         }
