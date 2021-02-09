@@ -69,7 +69,7 @@ pipeline {
 
                     def files = findFiles(glob: '**/docker-compose*.yml')
                     files.each {
-                        print("${it.name} : ${it.directory}")
+                        print("${it.name} : ${it.path.getParentFile().getName()}")
                     }
                     //String currentDir = new File("tests").getAbsolutePath()
                     //File fileDir = new File(currentDir)
