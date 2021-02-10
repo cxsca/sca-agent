@@ -29,6 +29,11 @@ pipeline {
             }
         }
         stage('Test') {
+            when {
+                expression {
+                    return false
+                }
+            }
             steps {
                 script{
                     dir("setup") {
@@ -69,12 +74,11 @@ pipeline {
                         testingScenarios["test-sometest"] = {
                             node("docker"){
                                     unstash 'bundle'
-                                    sh "docker run --rm -v ${WORKSPACE}:/bundle -w /bundle aweponken/alpine-zip unzip -d bundle ${scaAgentZip}"
+                                    sh "unzip -d bundle ${scaAgentZip}"
                                     dir("bundle")
                                     {
                                         sh("ls")
                                     }
-                                    //sh("docker-compose up -d | docker-compose down")
                             }
                         }
 
@@ -83,10 +87,9 @@ pipeline {
                            testingScenarios["test-${testName}"] = {
                                 node("docker"){
                                         unstash 'bundle'
-                                        sh "docker run --rm -v ${WORKSPACE}:/bundle -w /bundle aweponken/alpine-zip unzip -d bundle ${scaAgentZip}"
-                                        dir("bundle")
-                                        {
-                                            sh label: "setup", script: "setup.sh"
+                                        sh "unzip -d bundle ${scaAgentZip}"
+                                        dir("bundle"){
+                                            sh label: "setup", script: "sh ./setup.sh"
                                             sh "docker-compose up -d | docker-compose down"
                                         }
                                 }
