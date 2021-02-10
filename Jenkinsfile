@@ -65,25 +65,43 @@ pipeline {
             steps{
                 script{
 
+                    dir("Test1")
+                    {
+                        writeFile file:'dummy1', text: 'Test 1'
+                    }
+
+                    dir("Test2")
+                    {
+                        writeFile file:'dummy2', text: 'Test 2'
+                    }
+
+
                     def testingScenarios = [:]
 
                     dir("tests"){
 
                         def files = findFiles(glob: '**/docker-compose*.yml')
 
+
                         testingScenarios["test-sometest"] = {
-                            //node("docker"){
-                                sh("docker-compose up -d | docker-compose down")
-                            //}
+                            node("docker"){
+                                ws("Test1"){
+                                    sh "ls -l"
+                                    //sh("docker-compose up -d | docker-compose down")
+                                }
+                            }
                         }
 
                         files.each {
                            testName = it.path.split('/')[0]
                            testingScenarios["test-${testName}"] = {
-                                //node("docker"){
-                                    //sh("docker-compose -f ${WORKSPACE}/sca-agent/docker-compose.yml -f ${WORKSPACE}/sca-agent/tests/${it.path} up --abort-on-container-exit")
-                                    sh("docker-compose up -d | docker-compose down")
-                                //}
+                                node("docker"){
+                                    ws("Test2"){
+                                        //sh("docker-compose -f ${WORKSPACE}/sca-agent/docker-compose.yml -f ${WORKSPACE}/sca-agent/tests/${it.path} up --abort-on-container-exit")
+                                        //sh("docker-compose up -d | docker-compose down")
+                                        sh "ls -l"
+                                    }
+                                }
                             }
                         }
                     }
