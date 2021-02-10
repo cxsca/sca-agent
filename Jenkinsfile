@@ -71,8 +71,8 @@ pipeline {
                         def files = findFiles(glob: '**/docker-compose*.yml')
 
                         files.each {
-                           testName = it.path.split('/')[0]
-                           stash includes: "${it.path}/*", name: "${testName}"
+                           testName, composeFile = it.path.split('/')
+                           stash includes: "${WORKSPACE}/tests/${it.path}/*", name: "${testName}"
 
                            testingScenarios["test-${testName}"] = {
                                 node("docker"){
@@ -86,7 +86,7 @@ pipeline {
                                         dir("bundle"){
                                             sh label: "setup", script: "sh ./setup.sh"
 
-                                            sh "docker-compose -f docker-compose.yml -f tests/docker-compose.yml up -d && docker-compose down"
+                                            sh "docker-compose -f docker-compose.yml -f tests/${composeFile} up -d && docker-compose down"
                                         }
                                 }
                             }
