@@ -72,7 +72,7 @@ pipeline {
 
                         files.each {
                            testName = it.path.split('/')[0]
-                           stash includes: "${WORKSPACE}/${it.path}/*", name: "${testName}"
+                           stash includes: "${it.path}/*", name: "${testName}"
 
                            testingScenarios["test-${testName}"] = {
                                 node("docker"){
@@ -86,7 +86,7 @@ pipeline {
                                         dir("bundle"){
                                             sh label: "setup", script: "sh ./setup.sh"
 
-                                            sh "docker-compose -f docker-compose.yml -f tests/${testName}/docker-compose.yml up -d && docker-compose down"
+                                            sh "docker-compose -f docker-compose.yml -f tests/docker-compose.yml up -d && docker-compose down"
                                         }
                                 }
                             }
