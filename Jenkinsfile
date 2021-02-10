@@ -60,7 +60,7 @@ pipeline {
             steps{
                 script{
 
-                    sh "ls"
+                    stash includes: "${scaAgentZip}", name: 'bundle'
 
                     def testingScenarios = [:]
 
@@ -69,17 +69,19 @@ pipeline {
                         def files = findFiles(glob: '**/docker-compose*.yml')
 
 
-//                        testingScenarios["test-sometest"] = {
-//                            node("docker"){
-//                                    sh "ls -l"
-//                                    //sh("docker-compose up -d | docker-compose down")
-//                            }
-//                        }
+                        testingScenarios["test-sometest"] = {
+                            node("docker"){
+                                    unstash 'bundle'
+                                    sh "ls"
+                                    //sh("docker-compose up -d | docker-compose down")
+                            }
+                        }
 
                         files.each {
                            testName = it.path.split('/')[0]
                            testingScenarios["test-${testName}"] = {
                                 node("docker"){
+                                        unstash 'bundle'
                                         //sh("docker-compose -f ${WORKSPACE}/sca-agent/docker-compose.yml -f ${WORKSPACE}/sca-agent/tests/${it.path} up --abort-on-container-exit")
                                         //sh("docker-compose up -d | docker-compose down")
                                         sh "ls"
