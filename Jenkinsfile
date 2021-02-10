@@ -4,7 +4,7 @@ def scaAgentZip
 
 pipeline {
     parameters {
-        booleanParam(name: 'releaseNewVersion', defaultValue: false, description: 'If "true", New release will occur in GitHub')
+        booleanParam(name: 'releaseNewVersion', defaultValue: false, description: 'Create a public GitHub release')
     }
     agent {
         node {
@@ -16,41 +16,38 @@ pipeline {
         disableConcurrentBuilds()
     }
     environment {
-            VERSION = pipelineUtils.getSemanticVersion(0, 2)
+            VERSION = pipelineUtils.getSemanticVersion(0, 3)
     }
     stages{
         stage("Bundle") {
             steps {
                 script{
                     scaAgentZip = "sca-agent.${VERSION}.zip"
-                    sh(label: "Create bundle", script: "sh dev/bundle.sh ${scaAgentZip}")
+                    sh label: "Create bundle", script: "sh dev/bundle.sh ${scaAgentZip}"
                     archiveArtifacts artifacts: scaAgentZip
                 }
             }
         }
-        stage('Run E2E') {
-            when {
-                expression {
-                    return false
-                }
-            }
+        stage('Test') {
             steps {
                 script{
-                    currentBuild.displayName = VERSION
-                    e2eSecrets = pipelineUtils.getSCAAgentParams()
-                    withEnv([
-                        "JENKINS_NODE_COOKIE=dontkillMe",
-                        "AUTHENTICATIONTOKENSOURCE=" + e2eSecrets.resource,
-                        "SCOPE=" + e2eSecrets.scope,
-                        "GRANT_TYPE=" + e2eSecrets.grantType,
-                        "ACCESSCONTROLCLIENTID=" + e2eSecrets.clientId,
-                        "SCATENANT=" + e2eSecrets.tenant,
-                        "SCAUSERNAME=" + e2eSecrets.username,
-                        "SCAPASSWORDSECRET=" + e2eSecrets.password,
-                        "E2E_IMAGE_URL=" + e2eSecrets.e2eImageUrl]) {
-                        sh(label: "Setup", script: "sh setup.sh")
-                        sh("\$(aws ecr get-login --no-include-email --region eu-central-1)")
-                        sh(label: "Run e2e", script: "sh dev/run-e2e.sh")
+                    dir("setup") {
+                        currentBuild.displayName = VERSION
+                        sh label: "Install the agent", script: "unzip ${WORKSPACE}/${scaAgentZip} && sh ./setup.sh"
+                        e2eSecrets = pipelineUtils.getSCAAgentParams()
+                        withEnv([
+                            "JENKINS_NODE_COOKIE=dontkillMe",
+                            "AUTHENTICATIONTOKENSOURCE=" + e2eSecrets.resource,
+                            "SCOPE=" + e2eSecrets.scope,
+                            "GRANT_TYPE=" + e2eSecrets.grantType,
+                            "ACCESSCONTROLCLIENTID=" + e2eSecrets.clientId,
+                            "SCATENANT=" + e2eSecrets.tenant,
+                            "SCAUSERNAME=" + e2eSecrets.username,
+                            "SCAPASSWORDSECRET=" + e2eSecrets.password,
+                            "E2E_IMAGE_URL=" + e2eSecrets.e2eImageUrl]) {
+                            sh label: "Login to ECR", script: "\$(aws ecr get-login --no-include-email --region eu-central-1)"
+                            sh label: "Run E2E", script: "cp -r ../dev . && sh dev/run-e2e.sh"
+                        }
                     }
                 }
             }
