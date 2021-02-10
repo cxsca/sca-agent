@@ -74,7 +74,7 @@ pipeline {
                         testingScenarios["test-sometest"] = {
                             node("docker"){
                                     unstash 'bundle'
-                                    sh "unzip -d bundle ${scaAgentZip}"
+                                    sh "mkdir bundle && unzip -d bundle ${scaAgentZip}"
                                     dir("bundle")
                                     {
                                         sh("ls")
@@ -87,7 +87,7 @@ pipeline {
                            testingScenarios["test-${testName}"] = {
                                 node("docker"){
                                         unstash 'bundle'
-                                        sh "unzip -d bundle ${scaAgentZip}"
+                                        sh "mkdir bundle && unzip -d bundle ${scaAgentZip}"
                                         dir("bundle"){
                                             sh label: "setup", script: "sh ./setup.sh"
                                             sh "docker-compose up -d | docker-compose down"
