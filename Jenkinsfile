@@ -85,8 +85,8 @@ pipeline {
 
                                         dir("bundle"){
                                             //sh label: "setup", script: "sh ./setup.sh"
-                                            sh  label: "bundle folder" "sh ls"
-                                            sh  label: "test folder" "cd tests && sh ls"
+                                            sh  label: "bundle folder", script: "sh ls"
+                                            sh  label: "test folder", script: "cd tests && sh ls"
                                             //sh "docker-compose -f docker-compose.yml -f tests/${composeFile} up -d && docker-compose down"
                                         }
                                 }
