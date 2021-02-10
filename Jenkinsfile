@@ -72,7 +72,7 @@ pipeline {
                         testingScenarios["test-sometest"] = {
                             node("docker"){
                                     unstash 'bundle'
-                                    sh "docker run --rm -v ${PWD}:/bundle aweponken/alpine-zip unzip ${scaAgentZip}"
+                                    sh "docker run --rm -v ${WORKSPACE}:/ aweponken/alpine-zip unzip -d bundle ${scaAgentZip}"
                                     dir("bundle")
                                     {
                                         sh("ls")
@@ -86,7 +86,7 @@ pipeline {
                            testingScenarios["test-${testName}"] = {
                                 node("docker"){
                                         unstash 'bundle'
-                                        sh "docker run --rm -v ${PWD}:/bundle aweponken/alpine-zip unzip ${scaAgentZip}"
+                                        sh "docker run --rm -v ${WORKSPACE}:/ aweponken/alpine-zip unzip -d bundle ${scaAgentZip}"
                                         //sh("docker-compose -f ${WORKSPACE}/sca-agent/docker-compose.yml -f ${WORKSPACE}/sca-agent/tests/${it.path} up --abort-on-container-exit")
                                         //sh("docker-compose up -d | docker-compose down")
                                         dir("bundle")
