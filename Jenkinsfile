@@ -72,7 +72,7 @@ pipeline {
 
                         files.each {
                            def (testName, composeFile) = it.path.split('/')
-                           stash includes: "${testName}/*", name: "${testName}"
+                           stash includes: "${testName}/**", name: "${testName}"
 
                            testingScenarios["test-${testName}"] = {
                                 node("docker"){
