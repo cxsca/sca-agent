@@ -71,7 +71,7 @@ pipeline {
                         def files = findFiles(glob: '**/docker-compose*.yml')
 
                         files.each {
-                           testName, composeFile = it.path.split('/')
+                           def (testName, composeFile) = it.path.split('/')
                            stash includes: "${WORKSPACE}/tests/${it.path}/*", name: "${testName}"
 
                            testingScenarios["test-${testName}"] = {
