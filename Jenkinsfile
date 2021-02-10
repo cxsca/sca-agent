@@ -73,7 +73,7 @@ pipeline {
 
                         testingScenarios["test-sometest"] = {
                             node("docker"){
-                                sh("echo testComplete")
+                                sh("docker-compose up -d | docker-compose down")
                             }
                         }
 
@@ -82,7 +82,7 @@ pipeline {
                            testingScenarios["test-${testName}"] = {
                                 node("docker"){
                                     //sh("docker-compose -f ${WORKSPACE}/sca-agent/docker-compose.yml -f ${WORKSPACE}/sca-agent/tests/${it.path} up --abort-on-container-exit")
-                                    sh("echo ${WORKSPACE}")
+                                    sh("docker-compose up -d | docker-compose down")
                                 }
                             }
                         }
