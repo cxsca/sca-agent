@@ -85,7 +85,8 @@ pipeline {
 
                                         dir("bundle"){
                                             sh label: "setup", script: "sh ./setup.sh"
-                                            sh "docker-compose -f docker-compose.yml -f tests/${testName}/${composeFile} up -d && docker-compose down"
+                                            sh label: "Run agent" script:"docker-compose -f docker-compose.yml -f tests/${testName}/${composeFile} up -d"
+                                            sh label: "Shutdown agent" script:"docker-compose -f docker-compose.yml -f tests/${testName}/${composeFile} down"
                                         }
                                 }
                             }
