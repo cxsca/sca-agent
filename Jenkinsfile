@@ -72,18 +72,18 @@ pipeline {
                         def files = findFiles(glob: '**/docker-compose*.yml')
 
                         testingScenarios["test-sometest"] = {
-                            node("docker"){
+                            //node("docker"){
                                 sh("docker-compose up -d | docker-compose down")
-                            }
+                            //}
                         }
 
                         files.each {
                            testName = it.path.split('/')[0]
                            testingScenarios["test-${testName}"] = {
-                                node("docker"){
+                                //node("docker"){
                                     //sh("docker-compose -f ${WORKSPACE}/sca-agent/docker-compose.yml -f ${WORKSPACE}/sca-agent/tests/${it.path} up --abort-on-container-exit")
                                     sh("docker-compose up -d | docker-compose down")
-                                }
+                                //}
                             }
                         }
                     }
