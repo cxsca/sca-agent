@@ -57,12 +57,12 @@ pipeline {
                 }
             }
         }
-        stage('Run Scenario Tests')
+        stage('Scenario Tests')
         {
             steps{
                 script{
 
-                    stash includes: "${scaAgentZip}", name: 'bundle'
+                    stash includes: "${scaAgentZip}", name: "bundle"
 
                     def testingScenarios = [:]
 
@@ -70,27 +70,23 @@ pipeline {
 
                         def files = findFiles(glob: '**/docker-compose*.yml')
 
-
-                        testingScenarios["test-sometest"] = {
-                            node("docker"){
-                                    unstash 'bundle'
-                                    sh "mkdir bundle && unzip -d bundle ${scaAgentZip}"
-                                    dir("bundle")
-                                    {
-                                        sh("ls")
-                                    }
-                            }
-                        }
-
                         files.each {
                            testName = it.path.split('/')[0]
+                           stash includes: "${WORKSPACE}/${it.path}", name: "${testName}"
+
                            testingScenarios["test-${testName}"] = {
                                 node("docker"){
                                         unstash 'bundle'
-                                        sh "mkdir bundle && unzip -d bundle ${scaAgentZip}"
+                                        sh "mkdir bundle && mkdir bundle/tests && unzip -d bundle ${scaAgentZip}"
+
+                                        dir("bundle/tests"){
+                                            unstash "${testName}"
+                                        }
+
                                         dir("bundle"){
                                             sh label: "setup", script: "sh ./setup.sh"
-                                            sh "docker-compose up -d | docker-compose down"
+
+                                            sh "docker-compose -f docker-compose.yml -f tests/${testName}/docker-compose.yml up -d && docker-compose down"
                                         }
                                 }
                             }
