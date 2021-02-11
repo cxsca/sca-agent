@@ -2,10 +2,7 @@
 import sys
 
 
-class AgentErrror(Exception):
-    def __init__(self):
-        super("Error during processing the Agent Test")
-
+sys.exit("Error : something went wrong")
 
 # print("OpenID Logic")
-raise AgentErrror
+
