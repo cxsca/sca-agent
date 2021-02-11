@@ -1,11 +1,11 @@
 version: '3.7'
 
 services:
-  heath-test:
+  openid-test:
     image: agent-openid
     build:
       context: ./tests/openid/src
-      dockerfile: src/Dockerfile
+      dockerfile: Dockerfile
     networks:
       - sca-agent
     depends_on:
