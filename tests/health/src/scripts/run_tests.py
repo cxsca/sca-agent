@@ -1,3 +1,5 @@
+# Not finished, will be another PR to finish the tests logic
+
 import requests
 
 routes_to_check = ["http://scan-runner/health",
