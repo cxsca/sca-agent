@@ -71,11 +71,13 @@ pipeline {
                         def files = findFiles(glob: '**/docker-compose*.yml')
 
                         files.each {
+
                            def (testName, composeFile) = it.path.split('/')
                            stash includes: "${testName}/**", name: "${testName}"
 
                            testingScenarios["test-${testName}"] = {
                                 node("docker"){
+                                    ws("${testName}-workspace"){
                                         unstash 'bundle'
                                         sh "mkdir bundle && mkdir bundle/tests && unzip -d bundle ${scaAgentZip}"
 
@@ -88,6 +90,7 @@ pipeline {
                                             sh label: "Run agent", script: "docker-compose -f docker-compose.yml -f tests/${testName}/${composeFile} up -d"
                                             sh label: "Shutdown agent", script: "docker-compose -f docker-compose.yml -f tests/${testName}/${composeFile} down"
                                         }
+                                 }
                                 }
                             }
                         }
