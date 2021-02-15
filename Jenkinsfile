@@ -68,8 +68,6 @@ pipeline {
 
                     dir("tests"){
 
-                        stash includes:"base/*", name: "testsBase"
-
                         def files = findFiles(glob: '**/docker-compose*.yml')
 
                         files.each {
@@ -82,11 +80,6 @@ pipeline {
                                     ws("${testName}-workspace"){
                                         unstash 'bundle'
                                         sh "mkdir bundle && mkdir bundle/tests/base && unzip -d bundle ${scaAgentZip}"
-
-                                        dir("bundle/tests/base")
-                                        {
-                                            unstash "testsBase"
-                                        }
 
                                         dir("bundle/tests"){
                                             unstash "${testName}"
