@@ -88,7 +88,7 @@ pipeline {
                                         dir("bundle"){
                                             sh label: "setup", script: "sh ./setup.sh"
                                             sh label: "Run agent", script: "docker-compose -f docker-compose.yml up -d"
-                                            sh label: "Run Test", script: "docker-compose -f tests/${testName}/${composeFile} up -d"
+                                            sh label: "Run Test", script: "docker-compose -f tests/${testName}/${composeFile} up --build --abort-on-container-exit"
                                             sh label: "Shutdown Test", script: "docker-compose -f tests/${testName}/${composeFile} down --remove-orphans"
                                             sh label: "Shutdown agent", script: "docker-compose -f docker-compose.yml down"
                                         }
