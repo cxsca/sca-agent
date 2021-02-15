@@ -1,9 +1,9 @@
 FROM python:slim
 
+COPY scripts/* ./scripts/
+
 WORKDIR scripts
 
-COPY scripts/* .
+RUN ["python", "-m", "pip", "install", "-r", "requirements.txt"]
 
-RUN python3 -m pip install requests
-
-CMD ["python3", "-u", "run_tests.py"]
+CMD ["python", "-m", "unittest", "discover", "-p", "*_tests.py"]

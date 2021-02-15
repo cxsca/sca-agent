@@ -2,7 +2,6 @@ version: '3.7'
 
 services:
   identity-test:
-    image: agent-identity
-    build:
-      context: ./src
-      dockerfile: Dockerfile
+    image: identity-agent
+    build: ./src
+    network_mode: host

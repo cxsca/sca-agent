@@ -2,8 +2,6 @@ version: '3.7'
 
 services:
   health-test:
-    image: agent-health-check
+    image: health-check-agent
+    build: ./src
     network_mode: host
-    build:
-      context: ./src
-      dockerfile: Dockerfile
