@@ -79,7 +79,7 @@ pipeline {
                                 node("docker"){
                                     ws("${testName}-workspace"){
                                         unstash 'bundle'
-                                        sh "mkdir bundle && mkdir bundle/tests/base && unzip -d bundle ${scaAgentZip}"
+                                        sh "mkdir bundle && mkdir bundle/tests && unzip -d bundle ${scaAgentZip}"
 
                                         dir("bundle/tests"){
                                             unstash "${testName}"
