@@ -1,9 +1,8 @@
 version: '3.7'
 
 services:
-  health-test:
-    image: agent-health-check
-    network_mode: host
+  identity-test:
+    image: agent-identity
     build:
       context: ./src
       dockerfile: Dockerfile

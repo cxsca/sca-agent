@@ -1,7 +1,7 @@
 import requests
 import sys
 
-route_to_test = "http://localhost/health"
+route_to_test = "http://localhost/identity/.well-known/openid-configuration"
 
 try:
     r = requests.get(route_to_test)
