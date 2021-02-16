@@ -83,7 +83,7 @@ pipeline {
 
                                         sh label: "Create Directories", script: "mkdir agent && mkdir agent/tests && unzip -d agent ${scaAgentZip}"
 
-                                        sh label:"Copy Bundle Overrides", script: "[ -d \"agent/tests/${testName}/bundle\" ] && cp -fr agent/tests/${testName}/bundle/* agent/"
+                                        sh label:"Copy Bundle Overrides", script: "test -d \"agent/tests/${testName}/bundle\" && cp -fr agent/tests/${testName}/bundle/* agent/"
 
                                         dir("agent/tests"){
                                             unstash "${testName}"
