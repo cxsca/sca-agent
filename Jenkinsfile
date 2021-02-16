@@ -62,7 +62,7 @@ pipeline {
             steps{
                 script{
 
-                    stash includes: "${scaAgentZip}", name: "bundle"
+                    stash includes: "${scaAgentZip}", name: "agent"
 
                     def testingScenarios = [:]
 
@@ -78,19 +78,23 @@ pipeline {
                            testingScenarios["test-${testName}"] = {
                                 node("docker"){
                                     ws("${testName}-workspace"){
-                                        unstash 'bundle'
-                                        sh "mkdir bundle && mkdir bundle/tests && unzip -d bundle ${scaAgentZip}"
 
-                                        dir("bundle/tests"){
+                                        unstash 'agent'
+
+                                        sh label: "Create Directories", script: "mkdir agent && mkdir agent/tests && unzip -d agent ${scaAgentZip}"
+
+                                        sh label:"Copy Bundle Overrides", script:"cp -fr agent/tests/${testName}/bundle/* agent/"
+
+                                        dir("agent/tests"){
                                             unstash "${testName}"
                                         }
 
-                                        dir("bundle"){
-                                            sh label: "setup", script: "sh ./setup.sh"
-                                            sh label: "Run agent", script: "docker-compose -f docker-compose.yml up -d"
+                                        dir("agent"){
+                                            sh label: "Setup", script: "sh ./setup.sh"
+                                            sh label: "Run Agent", script: "docker-compose -f docker-compose.yml up -d"
                                             sh label: "Run Test", script: "docker-compose -f tests/${testName}/${composeFile} up --build --abort-on-container-exit"
                                             sh label: "Shutdown Test", script: "docker-compose -f tests/${testName}/${composeFile} down --remove-orphans"
-                                            sh label: "Shutdown agent", script: "docker-compose -f docker-compose.yml down"
+                                            sh label: "Shutdown Agent", script: "docker-compose -f docker-compose.yml down"
                                         }
                                  }
                                 }
