@@ -1,0 +1,7 @@
+version: '3.7'
+
+services:
+  customport-test:
+    image: customport-check-agent
+    build: ./src
+    network_mode: host
