@@ -83,7 +83,7 @@ pipeline {
 
                                         sh label: "Create Directories", script: "mkdir agent && mkdir agent/tests && unzip -d agent ${scaAgentZip}"
 
-                                        sh label:"Copy Bundle Overrides", script:"cp -fr agent/tests/${testName}/bundle/* agent/"
+                                        sh label:"Copy Bundle Overrides", script:"[ -d \"agent/tests/${testName}/bundle\" ] && cp -fr agent/tests/${testName}/bundle/* agent/"
 
                                         dir("agent/tests"){
                                             unstash "${testName}"
@@ -96,7 +96,7 @@ pipeline {
                                             sh label: "Shutdown Test", script: "docker-compose -f tests/${testName}/${composeFile} down --remove-orphans"
                                             sh label: "Shutdown Agent", script: "docker-compose -f docker-compose.yml down"
                                         }
-                                 }
+                                    }
                                 }
                             }
                         }
