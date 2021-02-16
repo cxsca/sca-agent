@@ -7,7 +7,7 @@ class HealthCheckTests(unittest.TestCase):
     def __init__(self, f):
         super(HealthCheckTests, self).__init__(f)
 
-        self.route_to_test = "http://localhost/health"
+        self.route_to_test = "http://localhost/api/health"
 
     def test_status_code(self):
         response = requests.get(self.route_to_test)
