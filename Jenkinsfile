@@ -83,7 +83,7 @@ pipeline {
 
                                         sh label: "Create Directories", script: "mkdir agent && mkdir agent/tests && unzip -d agent ${scaAgentZip}"
 
-                                        if (fileExists("agent/tests/${testName}/bundle"))
+                                        if (fileExists("agent/tests/${testName}/bundle/"))
                                         {
                                             sh label:"Copy Bundle Overrides", script: "cp -fr agent/tests/${testName}/bundle/* agent/"
                                         }
