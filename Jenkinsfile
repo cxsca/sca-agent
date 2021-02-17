@@ -29,11 +29,6 @@ pipeline {
             }
         }
         stage('Test') {
-            when {
-                expression {
-                    return false
-                }
-            }
             steps {
                 script{
                     dir("setup") {
@@ -62,7 +57,7 @@ pipeline {
             steps{
                 script{
 
-                    stash includes: "${scaAgentZip}", name: "agent"
+                    stash includes: "${scaAgentZip}", name: "agent-zip"
 
                     def testingScenarios = [:]
 
@@ -73,15 +68,17 @@ pipeline {
                         files.each {
 
                            def (testName, composeFile) = it.path.split('/')
+                           def testComposeFilePath = "tests/${testName}/${composeFile}"
                            stash includes: "${testName}/**", name: "${testName}"
 
                            testingScenarios["test-${testName}"] = {
                                 node("docker"){
                                     ws("${testName}-workspace"){
 
-                                        unstash 'agent'
+                                        unstash 'agent-zip'
 
-                                        sh label: "Create Directories", script: "mkdir agent && mkdir agent/tests && unzip -d agent ${scaAgentZip}"
+                                        sh label: "Create Directories", script: "mkdir agent && mkdir agent/tests"
+                                        sh label: "Unzip Bundle", script: "unzip -d agent ${scaAgentZip}"
 
                                         dir("agent/tests"){
                                             unstash "${testName}"
@@ -89,15 +86,19 @@ pipeline {
 
                                         dir("agent"){
 
-                                            if (fileExists("tests/${testName}/bundle/"))
+                                            def bundleOverridesDir = "tests/${testName}/bundle-overrides/"
+
+                                            if (fileExists("${bundleOverridesDir}"))
                                             {
-                                                sh label:"Copy Bundle Overrides", script: "cp -a tests/${testName}/bundle/. ./"
+                                                sh label:"Copy Bundle Overrides", script: "cp -a ${bundleOverridesDir}. ./"
                                             }
 
                                             sh label: "Setup", script: "sh ./setup.sh"
+
                                             sh label: "Run Agent", script: "docker-compose -f docker-compose.yml up -d"
-                                            sh label: "Run Test", script: "docker-compose -f tests/${testName}/${composeFile} up --build --abort-on-container-exit"
-                                            sh label: "Shutdown Test", script: "docker-compose -f tests/${testName}/${composeFile} down --remove-orphans"
+                                            sh label: "Run Test", script: "docker-compose -f ${testComposeFilePath} up --abort-on-container-exit"
+
+                                            sh label: "Shutdown Test", script: "docker-compose -f ${testComposeFilePath} down --remove-orphans"
                                             sh label: "Shutdown Agent", script: "docker-compose -f docker-compose.yml down"
                                         }
                                     }
