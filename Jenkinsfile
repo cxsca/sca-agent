@@ -83,17 +83,17 @@ pipeline {
 
                                         sh label: "Create Directories", script: "mkdir agent && mkdir agent/tests && unzip -d agent ${scaAgentZip}"
 
-                                        if (fileExists("agent/tests/${testName}/bundle/"))
-                                        {
-                                            sh label:"Copy Bundle Overrides", script: "cp -fr agent/tests/${testName}/bundle/* agent/"
-                                        }
-                                        //sh label:"Copy Bundle Overrides", script: "test -d agent/tests/${testName}/bundle && cp -fr agent/tests/${testName}/bundle/* agent/"
-
                                         dir("agent/tests"){
                                             unstash "${testName}"
                                         }
 
                                         dir("agent"){
+
+                                            if (fileExists("tests/${testName}/bundle/"))
+                                            {
+                                                sh label:"Copy Bundle Overrides", script: "cp -fr agent/tests/${testName}/bundle/* ."
+                                            }
+
                                             sh label: "Setup", script: "sh ./setup.sh"
                                             sh label: "Run Agent", script: "docker-compose -f docker-compose.yml up -d"
                                             sh label: "Run Test", script: "docker-compose -f tests/${testName}/${composeFile} up --build --abort-on-container-exit"
