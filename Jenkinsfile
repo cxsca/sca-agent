@@ -91,7 +91,7 @@ pipeline {
 
                                             if (fileExists("tests/${testName}/bundle/"))
                                             {
-                                                sh label:"Copy Bundle Overrides", script: "cp -fr /agent/tests/${testName}/bundle* ."
+                                                sh label:"Copy Bundle Overrides", script: "cp -fr tests/${testName}/bundle/ ."
                                             }
 
                                             sh label: "Setup", script: "sh ./setup.sh"
