@@ -6,4 +6,4 @@ WORKDIR scripts
 
 RUN ["python", "-m", "pip", "install", "-r", "requirements.txt"]
 
-CMD ["python", "test_runner.py"]
+CMD ["python", "-W", "ignore" , "test_runner.py"]

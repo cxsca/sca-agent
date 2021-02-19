@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+  connectivity-https-test:
+    image: connectivity-https-agent
+    build: ../connectivity/src
+    network_mode: host
+    environment:
+      AGENT-PROTOCOL: https
+      AGENT-PORT: 443

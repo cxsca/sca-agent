@@ -8,10 +8,10 @@ class PreSignedUrlTests(ConnectivityBase):
     def test_pre_signed(self):
 
         # Get pre-signed url
-        response = requests.post(f"{self.localhost}/api/uploads")
+        response = requests.post(f"{self.localhost}/api/uploads", verify=False)
         pre_signed_url = response.json()["url"]
 
         # upload the file to bucket
         with open("assets/test_upload.txt", "rb") as file_to_send:
-            upload_response = requests.put(pre_signed_url, data=file_to_send)
+            upload_response = requests.put(pre_signed_url, data=file_to_send, verify=False)
             self.assertEqual(upload_response.status_code, 200)
