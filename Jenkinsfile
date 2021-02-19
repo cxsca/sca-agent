@@ -69,7 +69,7 @@ pipeline {
 
                            def (testName, composeFile) = it.path.split('/')
                            def testComposeFilePath = "tests/${testName}/${composeFile}"
-                           stash includes: "${testName}/**", name: "${testName}"
+                           stash includes: "**", name: "tests"
 
                            testingScenarios["test-${testName}"] = {
                                 node("docker"){
@@ -81,7 +81,7 @@ pipeline {
                                         sh label: "Unzip Bundle", script: "unzip -d agent ${scaAgentZip}"
 
                                         dir("agent/tests"){
-                                            unstash "${testName}"
+                                            unstash "tests"
                                         }
 
                                         dir("agent"){
