@@ -96,7 +96,7 @@ pipeline {
                                             sh label: "Setup", script: "sh ./setup.sh"
 
                                             sh label: "Run Agent", script: "docker-compose -f docker-compose.yml up -d"
-                                            sh label: "Run Test", script: "docker-compose -f ${testComposeFilePath} up --abort-on-container-exit"
+                                            sh label: "Run Test", script: "docker-compose -f ${testComposeFilePath} up --build --abort-on-container-exit"
 
                                             sh label: "Shutdown Test", script: "docker-compose -f ${testComposeFilePath} down --remove-orphans"
                                             sh label: "Shutdown Agent", script: "docker-compose -f docker-compose.yml down"
