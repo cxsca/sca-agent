@@ -170,7 +170,7 @@ services:
       retries: 30
   ########################################################################
   source-resolver:
-    image: cxsca/source-resolver:2021.01.20.1422-985f6b3
+    image: cxsca/source-resolver:2021.02.18.1443-d1f1924
     restart: always
     environment:
       ENABLESTDOUT: "true"
