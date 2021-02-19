@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  customport-eu-test:
+    image: customport-eu-check-agent
+    build: ../connectivity/src
+    network_mode: host
+    environment:
+      AGENT-PORT: 5001
