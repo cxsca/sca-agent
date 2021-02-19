@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  health-test:
-    image: health-check-agent
+  connectivity-test:
+    image: connectivity-agent
     build: ./src
     network_mode: host

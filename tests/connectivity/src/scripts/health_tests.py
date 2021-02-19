@@ -1,21 +1,17 @@
 import requests
-import unittest
-import sys
+from test_base import ConnectivityBase
 
 
-class CustomPortTests(unittest.TestCase):
-    def __init__(self, f):
-        super(CustomPortTests, self).__init__(f)
+class HealthCheckTests(ConnectivityBase):
+    __test__ = True
 
-        self.localhost = "http://localhost:5001"
-
-    def test_scan_runner_healthy(self):
+    def test_status_code(self):
         response = requests.get(f"{self.localhost}/api/health")
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["status"], "available")
 
-    def test_minio_with_custom_port_healthy(self):
+    def test_minio_healthy(self):
 
         headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, '
                                  'like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
@@ -25,10 +21,3 @@ class CustomPortTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIsNotNone(response.content)
 
-
-# Make container properly exit, when tests fail
-if __name__ == "__main__":
-    runner = unittest.TextTestRunner()
-    result = runner.run(unittest.defaultTestLoader.loadTestsFromTestCase(CustomPortTests))
-    result.printErrors()
-    sys.exit(not result.wasSuccessful())

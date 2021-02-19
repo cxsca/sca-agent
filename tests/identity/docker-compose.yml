@@ -1,7 +1,0 @@
-version: '3.7'
-
-services:
-  identity-test:
-    image: identity-agent
-    build: ./src
-    network_mode: host
