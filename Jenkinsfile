@@ -97,7 +97,7 @@ pipeline {
 
                                             if (fileExists(".env.overrides"))
                                             {
-                                                sh label: "Apply Environment Variables", script: "echo -e \"\n\" >> .env; for line in $$(cat .env.overrides); do echo \"$$line\" >> .env; done"
+                                                sh label: "Apply Environment Variables", script: "echo -e \"\n\" >> .env; for line in \$(cat .env.overrides); do echo \"\$line\" >> .env; done"
                                             }
 
                                             sh label: "Run Agent", script: "docker-compose -f docker-compose.yml up -d"
