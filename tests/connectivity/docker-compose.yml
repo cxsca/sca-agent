@@ -3,5 +3,5 @@ version: '3.7'
 services:
   connectivity-test:
     image: connectivity-agent
-    build: ./src
+    build: ../src/connectivity
     network_mode: host

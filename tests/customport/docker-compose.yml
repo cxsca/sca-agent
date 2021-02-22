@@ -3,7 +3,7 @@ version: '3.7'
 services:
   customport-test:
     image: customport-check-agent
-    build: ../connectivity/src
+    build: ../src/connectivity
     network_mode: host
     environment:
       AGENT-PORT: 5001

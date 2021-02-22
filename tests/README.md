@@ -40,28 +40,17 @@ variables, and some configuration for volumes you should process like this:
                |--http/
                   |--...
          |--.env.defaults
+         |--docker-compose.yml
          |--...
       |--...
 ```
 
 Files and directories inside the `bundle-overrides` will simply replace original SCA Agent's files during the runtime
 
-___
-### Recommendation
-
-If your tests are builds from a `Dockerfile` it is recommended to place them in a separate `src` folder 
-with all the required assets
-
-```
-|--tests/
-   |--{test directory}/
-      |--bundle-overrides/
-      |--src/
-         |--scripts/           #Can be assets/scripts/etc...
-            |--..
-         |--Dockerfile
-      |--docker-compose.yml
-```
+#### Override Environment Variables
+Environment Variables can be overwritten by adding `.env.overrides` files in the root of `bundle-overrides`. 
+That will simply overwrite the values specified in `.env` by adding them to the bottom of the file. This will simply make
+the runtime work with new values.
 ___
 
 ## Tests Runtime
@@ -82,6 +71,7 @@ ___
 1. If `bundle-overrides` directory exists inside the test -> the contents will replace an original agent's files
 1. `Setup` is executed
     - **!!! IMPORTANT !!! make sure your custom `.env.defaults.` does not violate any secrets**
+1. If there is the file `.env.overrides` -> add specific environment variables to the Agent
 1. Agent startup
 1. Test startup 
 1. Test shutdown

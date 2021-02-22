@@ -95,6 +95,11 @@ pipeline {
 
                                             sh label: "Setup", script: "sh ./setup.sh"
 
+                                            if (fileExists(".env.overrides"))
+                                            {
+                                                sh label: "Apply Environment Variables", script: "echo -e \"\n\" >> .env; for line in $(cat .env.overrides); do echo \"$line\" >> .env; done"
+                                            }
+
                                             sh label: "Run Agent", script: "docker-compose -f docker-compose.yml up -d"
                                             sh label: "Run Test", script: "docker-compose -f ${testComposeFilePath} up --build --abort-on-container-exit"
 

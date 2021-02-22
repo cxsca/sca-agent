@@ -3,5 +3,5 @@ version: '3.7'
 services:
   connectivity-eu-test:
     image: connectivity-eu-check-agent
-    build: ../connectivity/src
+    build: ../src/connectivity
     network_mode: host

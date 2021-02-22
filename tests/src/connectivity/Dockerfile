@@ -1,6 +1,6 @@
 FROM python:slim
 
-COPY scripts/ ./scripts/
+COPY scripts ./scripts/
 
 WORKDIR scripts
 
