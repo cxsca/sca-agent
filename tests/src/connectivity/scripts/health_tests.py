@@ -8,6 +8,8 @@ class HealthCheckTests(ConnectivityBase):
     def test_status_code(self):
         response = requests.get(f"{self.localhost}/api/health", verify=False)
 
+        print(f"THE HEALTH URL : {response.url}")
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["status"], "available")
 
