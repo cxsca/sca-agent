@@ -6,5 +6,5 @@ services:
     build: ../src/connectivity
     network_mode: host
     environment:
-      AGENT-PORT: 5001
+      AGENT_PORT: 5001
       RUN_TEST_MODULES: health_tests, presignedurl_tests
