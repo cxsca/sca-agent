@@ -6,5 +6,6 @@ services:
     build: ../src/connectivity
     network_mode: host
     environment:
-      AGENT-PROTOCOL: https
-      AGENT-PORT: 443
+      AGENT_PROTOCOL: https
+      AGENT_PORT: 443
+      RUN_TEST_MODULES: health_tests, presignedurl_tests

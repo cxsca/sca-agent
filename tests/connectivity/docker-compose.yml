@@ -5,3 +5,5 @@ services:
     image: connectivity-agent
     build: ../src/connectivity
     network_mode: host
+    environment:
+      RUN_TEST_MODULES: health_tests, identity_tests, presignedurl_tests

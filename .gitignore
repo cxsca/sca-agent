@@ -12,3 +12,5 @@ VERSION
 # traefik
 /volumes/traefik/ssl/*
 !volumes/traefik/ssl/README.md
+
+/tests/runtime

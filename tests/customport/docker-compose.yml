@@ -7,3 +7,4 @@ services:
     network_mode: host
     environment:
       AGENT-PORT: 5001
+      RUN_TEST_MODULES: health_tests, presignedurl_tests
