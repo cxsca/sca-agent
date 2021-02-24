@@ -85,7 +85,7 @@ pipeline {
                                         }
 
                                         dir("agent"){
-                                              sh label: "Run Sceario Test", script: "sh tests/run_test_scenario.sh"
+                                              sh label: "Run Sceario Test", script: "sh tests/run_test_scenario.sh ${testName}"
                                         }
                                     }
                                 }
