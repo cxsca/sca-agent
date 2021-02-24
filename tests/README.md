@@ -53,6 +53,21 @@ That will simply overwrite the values specified in `.env` by adding them to the 
 the runtime work with new values.
 ___
 
+### Test Scenario docker-compose.yml
+
+```yml
+services:
+  %scenario-name%-test:
+    image: %scenario-name%-check-agent
+    build: ../src/%path-to-tests%
+    network_mode: host
+    environment:
+      RUN_TEST_MODULES: health_tests, identity_tests, presignedurl_tests
+```
+The test's `docker-compose.yml` must share the host network to do the requests to the running agent.
+To specify which tests to run simply add Environment Variable with the comma-separated test modules like specified above
+---
+
 ## Tests Runtime
 
 ```
