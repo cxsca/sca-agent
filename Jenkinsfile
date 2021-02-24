@@ -85,26 +85,7 @@ pipeline {
                                         }
 
                                         dir("agent"){
-
-                                            def bundleOverridesDir = "tests/${testName}/bundle-overrides/"
-
-                                            if (fileExists("${bundleOverridesDir}"))
-                                            {
-                                                sh label:"Copy Bundle Overrides", script: "cp -a ${bundleOverridesDir}. ./"
-                                            }
-
-                                            sh label: "Setup", script: "sh ./setup.sh"
-
-                                            if (fileExists(".env.overrides"))
-                                            {
-                                                sh label: "Apply Environment Variables", script: "echo -e \"\\n\" >> .env; for line in \$(cat .env.overrides); do echo \"\$line\" >> .env; done"
-                                            }
-
-                                            sh label: "Run Agent", script: "docker-compose -f docker-compose.yml up -d"
-                                            sh label: "Run Test", script: "docker-compose -f ${testComposeFilePath} up --build --abort-on-container-exit"
-
-                                            sh label: "Shutdown Test", script: "docker-compose -f ${testComposeFilePath} down --remove-orphans"
-                                            sh label: "Shutdown Agent", script: "docker-compose -f docker-compose.yml down"
+                                              sh label: "Run Sceario Test", script: "sh tests/run_test_scenario.sh"
                                         }
                                     }
                                 }
