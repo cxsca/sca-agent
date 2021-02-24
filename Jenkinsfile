@@ -21,7 +21,8 @@ pipeline {
     stages{
         stage("Bundle") {
             steps {
-                script{
+                script {
+                    pipelineUtils.loginToDockerhub()
                     scaAgentZip = "sca-agent.${VERSION}.zip"
                     sh label: "Create bundle", script: "sh dev/bundle.sh ${scaAgentZip}"
                     archiveArtifacts artifacts: scaAgentZip
