@@ -85,7 +85,10 @@ pipeline {
                                         }
 
                                         dir("agent"){
-                                              sh label: "Run Sceario Test", script: "sh tests/run_test_scenario.sh ${testName}"
+                                             def statusCode = sh label: "Run Sceario Test", script: "sh tests/run_test_scenario.sh ${testName}", returnStatus: true
+                                             if (statusCode == 1) {
+                                                error "Something went wrong, please check the logs"
+                                             }
                                         }
                                     }
                                 }

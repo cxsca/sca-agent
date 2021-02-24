@@ -10,6 +10,7 @@ if [ -d "$bundle_overrides_dir" ]; then
 fi
 
 echo "======Setup Agent======"
+chmod +x setup.sh
 ./setup.sh
 
 if test -f ".env.overrides"; then
