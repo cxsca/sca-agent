@@ -76,6 +76,8 @@ pipeline {
                                 node("docker"){
                                     ws("${testName}-workspace"){
 
+                                        pipelineUtils.loginToDockerhub()
+
                                         unstash 'agent-zip'
 
                                         sh label: "Create Directories", script: "mkdir agent && mkdir agent/tests"
