@@ -92,3 +92,13 @@ To specify which tests to run simply add Environment Variable with the comma-sep
 1. Test shutdown
 1. Agent shutdown
 ___
+
+### Running Testing Scenarios Locally
+
+To run the tests locally you have to run it from the `root` directory of your `sca-agent`
+
+```sh
+sh ./tests/run_test_scenario.sh %scenario_name%
+```
+
+`%scnario_name%` is a name of your testing scenario in `tests` directory

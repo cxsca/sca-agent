@@ -10,7 +10,7 @@ env_run_test_modules = os.environ.get("RUN_TEST_MODULES")
 
 if not env_run_test_modules:
     print("No tests were specified in docker-compose.yml for current scenario. \n"
-          "Please add comma separated list of tests to be run with Environment Variable `RUN_TESTS` \n"
+          "Please add comma separated list of tests to be run with Environment Variable `RUN_TEST_MODULES` \n"
           "Example (Modules) : RUN_TEST_MODULES: health_tests")
     sys.exit(1)
 
