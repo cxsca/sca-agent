@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+  customport-test:
+    image: customport-check-agent
+    build: ../src/connectivity
+    network_mode: host
+    environment:
+      AGENT_PORT: 5001
+      RUN_TEST_MODULES: health_tests, presignedurl_tests

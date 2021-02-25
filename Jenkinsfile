@@ -21,7 +21,8 @@ pipeline {
     stages{
         stage("Bundle") {
             steps {
-                script{
+                script {
+                    pipelineUtils.loginToDockerhub()
                     scaAgentZip = "sca-agent.${VERSION}.zip"
                     sh label: "Create bundle", script: "sh dev/bundle.sh ${scaAgentZip}"
                     archiveArtifacts artifacts: scaAgentZip
@@ -49,6 +50,56 @@ pipeline {
                             sh label: "Run E2E", script: "cp -r ../dev . && sh dev/run-e2e.sh"
                         }
                     }
+                }
+            }
+        }
+        stage('Scenario Tests')
+        {
+            steps{
+                script{
+
+                    stash includes: "${scaAgentZip}", name: "agent-zip"
+
+                    def testingScenarios = [:]
+
+                    dir("tests"){
+
+                        def files = findFiles(glob: '**/docker-compose*.yml')
+
+                        files.each {
+
+                           def (testName, composeFile) = it.path.split('/')
+                           def testComposeFilePath = "tests/${testName}/${composeFile}"
+                           stash includes: "**", name: "tests"
+
+                           testingScenarios["test-${testName}"] = {
+                                node("docker"){
+                                    ws("${testName}-workspace"){
+
+                                        pipelineUtils.loginToDockerhub()
+
+                                        unstash 'agent-zip'
+
+                                        sh label: "Create Directories", script: "mkdir agent && mkdir agent/tests"
+                                        sh label: "Unzip Bundle", script: "unzip -d agent ${scaAgentZip}"
+
+                                        dir("agent/tests"){
+                                            unstash "tests"
+                                        }
+
+                                        dir("agent"){
+                                             def statusCode = sh label: "Run Sceario Test", script: "sh tests/run_test_scenario.sh ${testName}", returnStatus: true
+                                             if (statusCode == 1) {
+                                                error "Something went wrong, please check the logs"
+                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                   parallel testingScenarios
                 }
             }
         }
