@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  connectivity-eu-test:
+    image: connectivity-eu-check-agent
+    build: ../src/connectivity
+    network_mode: host
+    environment:
+      RUN_TEST_MODULES: health_tests, identity_tests, presignedurl_tests
