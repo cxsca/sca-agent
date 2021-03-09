@@ -9,7 +9,10 @@ class HealthCheckTests(ConnectivityBase):
         response = requests.get(f"{self.localhost}/api/health", verify=False)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["status"], "available")
+        response_object = response.json()
+        self.assertEqual(response_object["status"], "available")
+        self.assertIsNotNone(response_object["version"])
+        self.assertEqual(len(response_object["notes"]), 3)
 
     def test_minio_healthy(self):
 
