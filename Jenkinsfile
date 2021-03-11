@@ -82,7 +82,6 @@ pipeline {
                                     ws("${testName}-workspace"){
 
                                         pipelineUtils.loginToDockerhub()
-                                        pipelineUtils.checkoutLumops()
 
                                         unstash 'agent-zip'
 
