@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  goat-scan-test:
+    image: goat-scan-agent
+    build: ../src/scan
+    network_mode: host
+    environment:
+      RUN_TEST_MODULES: scan_goat_tests
+      SCATENANT: ${SCATENANT}
+      SCAUSERNAME: ${SCAUSERNAME}
+      SCAPASSWORDSECRET: ${SCAPASSWORDSECRET}
