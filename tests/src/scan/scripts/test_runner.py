@@ -16,9 +16,6 @@ if not env_run_test_modules:
 
 test_modules_to_run = [x.strip() for x in env_run_test_modules.split(',')]
 
-if os.path.exists("../gitDevops"):
-    os.system("python3 -m pip install -r ../gitDevops/lumops/requirements.txt")
-
 for env_test_module in test_modules_to_run:
     test_module = importlib.import_module(env_test_module)
 
