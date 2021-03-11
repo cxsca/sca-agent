@@ -18,5 +18,12 @@ class ScanBase(unittest.TestCase):
         self.localhost = f"{protocol}://localhost:{port}"
 
     def start_scan(self, project_name, url, location_folder):
+        return os.system(f"CLI/runCxConsole.sh scascan "
+                         f"-scaapiurl {self.localhost} "
+                         f"-projectname {project_name} "
+                         f"-scalocationpath {location_folder} "
+                         #f"-locationurl {url} "
+                         f"-scaUsername {self.CXUser} "
+                         f"-scaPassword {self.CXPasswordSecret} "
+                         f"-scaAccount {self.CXAccount} ")
 
-        return os.system(f"CLI/runCxConsole.sh scascan -locationurl {url} -project-name {project_name} -scalocationpath {location_folder}")
