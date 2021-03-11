@@ -1,0 +1,18 @@
+{
+    "name": "sca-goat",
+    "version": "1.0.0",
+    "description": "This is not real manifest file. Use for learning only",
+    "main": "index.js",
+    "devDependencies": {
+        "inflight": "1.0.6",
+        "yauzl": "2.10.0",
+        "string": "3.3.3",
+        "bluebird": "3.7.2",
+	"body-parser": "1.19.0",
+	"select2": "4.0.13",
+	"utile": "0.3.0",
+	"jquery": "3.5.1",
+	"parsejson": "0.0.3",
+	"timespan": "2.3.0"
+    }
+}
