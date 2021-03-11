@@ -21,9 +21,8 @@ class ScanBase(unittest.TestCase):
         return os.system(f"CLI/runCxConsole.sh scascan "
                          f"-scaapiurl {self.localhost} "
                          f"-projectname {project_name} "
-                         f"-scalocationpath {location_folder} "
-                         #f"-locationurl {url} "
                          f"-scaUsername {self.CXUser} "
                          f"-scaPassword {self.CXPasswordSecret} "
-                         f"-scaAccount {self.CXAccount} ")
+                         f"-scaAccount {self.CXAccount} "
+                         f"{location_argument}")
 
