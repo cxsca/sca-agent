@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  private_registries-test:
+    image: private_registries-agent
+    build: ../src/privateregistries
+    network_mode: host
+    depends_on:
+      - artifactory
+    environment:
+      RUN_TEST_MODULES: privateregistries_tests
+
+  artifactory:
+    image: docker.bintray.io/jfrog/artifactory-oss:7.12.6
+    networks:
+      - sca-agent
+    ports:
+      - "8081:8081"
+      - "8082:8082"
+
+networks:
+  sca-agent:
+    name: sca-agent
