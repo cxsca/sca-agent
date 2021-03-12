@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  private_registries-test:
+  privateregistries-test:
     image: private_registries-agent
     build: ../src/scan
     network_mode: host
@@ -9,6 +9,9 @@ services:
       - artifactory
     environment:
       RUN_TEST_MODULES: privateregistries_tests
+      TEST_SCA_TENANT: ${TEST_SCA_TENANT}
+      TEST_SCA_USERNAME: ${TEST_SCA_USERNAME}
+      TEST_SCA_PASSWORD: ${TEST_SCA_PASSWORD}
 
   artifactory:
     image: docker.bintray.io/jfrog/artifactory-oss:7.12.6
