@@ -20,7 +20,6 @@ class ScanBase(unittest.TestCase):
 
     def setUp(self):
         self.authorize()
-        self.create_project("SCAAgentTest")
 
     def tearDown(self):
         response = requests.delete(f"{self.localhost}/risk-management/projects/{self.project_id}",

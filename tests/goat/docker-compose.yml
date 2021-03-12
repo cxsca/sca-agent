@@ -7,6 +7,3 @@ services:
     network_mode: host
     environment:
       RUN_TEST_MODULES: scan_goat_tests
-      SCATENANT: ${SCATENANT}
-      SCAUSERNAME: ${SCAUSERNAME}
-      SCAPASSWORDSECRET: ${SCAPASSWORDSECRET}
