@@ -39,10 +39,12 @@ docker-compose -f docker-compose.yml -p "$testName-agent" up -d
 sleep 5s
 
 echo "======Run Test======"
-docker-compose -f "tests/$testName/docker-compose.yml" up --build --abort-on-container-exit
+test_exit=$(docker-compose -f "tests/$testName/docker-compose.yml" up --build --exit-code-from "$testName-test")
 
 echo "======Shutdown Agent======"
 docker-compose -f docker-compose.yml -p "$testName-agent" down
 
 echo "======Shutdown Test======"
 docker-compose -f "tests/$testName/docker-compose.yml" down
+
+exit "$test_exit"
