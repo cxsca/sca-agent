@@ -30,11 +30,6 @@ pipeline {
             }
         }
         stage('Test') {
-            when {
-                        expression {
-                            return false
-                        }
-                    }
             steps {
                 script{
                     dir("setup") {
