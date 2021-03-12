@@ -18,6 +18,9 @@ class ScanBase(unittest.TestCase):
 
         self.localhost = f"{protocol}://localhost:{port}"
 
+        self.access_token = None
+        self.project_id = None
+
     def setUp(self):
         self.authorize()
 
@@ -62,7 +65,6 @@ class ScanBase(unittest.TestCase):
     # Start Scan
     def start_scan_and_wait(self, type, url, num_of_checks=20):
 
-        # Initiate a scan
         request_body = {
             "project": {
                 "id": f"{self.project_id}",
@@ -74,24 +76,27 @@ class ScanBase(unittest.TestCase):
         }
         response = requests.post(f"{self.localhost}/api/scans", headers={"Authorization": f"bearer {self.access_token}"}, json=request_body, verify=False)
         self.assertEqual(response.status_code, 201)
-        scan_id = response.json()["id"]
-        print(f"Scan Id: `{scan_id}`")
+        self.scan_id = response.json()["id"]
+        print(f"Scan Id: `{self.scan_id}`")
 
+        scan_completed = False
         for i in range(1, num_of_checks):
 
             print(f"Waiting for the scan to finish (attempt #{i}) ...")
             time.sleep(self.await_time_in_secs)
 
-            response = requests.get(f"{self.localhost}/risk-management/scans/{scan_id}/status", headers={"Authorization": f"bearer {self.access_token}"}, verify=False)
+            response = requests.get(f"{self.localhost}/risk-management/scans/{self.scan_id}/status", headers={"Authorization": f"bearer {self.access_token}"}, verify=False)
             self.assertEqual(response.status_code, 200)
             scan_status = response.json()["name"].lower()
 
             if scan_status != "scanning":
                 print(f"Scan finished with status `{scan_status}`")
                 self.assertEqual(scan_status, "done")
-                return True
+                scan_completed = True
+                break
 
-        return False
+        if not scan_completed:
+            self.fail(f"Scan has not finished after {num_of_checks} checks")
 
 
 
