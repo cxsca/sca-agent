@@ -74,7 +74,9 @@ class ScanBase(unittest.TestCase):
                 }
             }
         }
-        response = requests.post(f"{self.localhost}/api/scans", headers={"Authorization": f"bearer {self.access_token}"}, json=request_body, verify=False)
+        response = requests.post(f"{self.localhost}/api/scans",
+                                 headers={"Authorization": f"bearer {self.access_token}"},
+                                 json=request_body, verify=False)
         self.assertEqual(response.status_code, 201)
         self.scan_id = response.json()["id"]
         print(f"Scan Id: `{self.scan_id}`")
@@ -85,7 +87,8 @@ class ScanBase(unittest.TestCase):
             print(f"Waiting for the scan to finish (attempt #{i}) ...")
             time.sleep(self.await_time_in_secs)
 
-            response = requests.get(f"{self.localhost}/risk-management/scans/{self.scan_id}/status", headers={"Authorization": f"bearer {self.access_token}"}, verify=False)
+            response = requests.get(f"{self.localhost}/risk-management/scans/{self.scan_id}/status",
+                                    headers={"Authorization": f"bearer {self.access_token}"}, verify=False)
             self.assertEqual(response.status_code, 200)
             scan_status = response.json()["name"].lower()
 
@@ -97,10 +100,3 @@ class ScanBase(unittest.TestCase):
 
         if not scan_completed:
             self.fail(f"Scan has not finished after {num_of_checks} checks")
-
-
-
-
-
-
-
