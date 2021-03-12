@@ -3,7 +3,7 @@ version: '3.7'
 services:
   private_registries-test:
     image: private_registries-agent
-    build: ../src/privateregistries
+    build: ../src/scan
     network_mode: host
     depends_on:
       - artifactory
