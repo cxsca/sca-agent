@@ -126,7 +126,7 @@ services:
       - sca-agent
   ########################################################################
   scan-runner:
-    image: cxsca/scan-runner:2021.03.02.1902-10c3870
+    image: cxsca/scan-runner:2021.03.09.1328-ced4b22
     restart: always
     environment:
       PRETTY: ${PRETTY_LOG}
@@ -139,7 +139,9 @@ services:
       BUCKETNAME: ${UPLOADS_BUCKET}
       SOURCERESOLVERDEGREEOFPARALLELISM: ${PARALLEL_SCANS}
       UPLOADSEXTERNALBASEURL: ${TRANSFER_PROTOCOL}://${EXTERNAL_HOSTNAME}:${EXTERNAL_PORT}
+      ACCESS_CONTROL_TEST_URL: ${ACCESS_CONTROL_PROTOCOL}://${ACCESS_CONTROL_HOST}/identity/.well-known/openid-configuration
       SCA_API_URL: ${SCA_API_PROTOCOL}://${SCA_API_HOST}
+      SCA_API_TEST_URL: ${SCA_API_PROTOCOL}://${SCA_API_HOST}/risk-management/health
       SOURCERESOLVERAPI: http://source-resolver
       EXECUTIONMODE: sca-agent
       SCA_AGENT_VERSION: ${AGENT_VERSION}

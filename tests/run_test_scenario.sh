@@ -2,6 +2,17 @@
 
 testName=$1
 
+if [ -z "$TEST_SCA_TENANT" ]; then
+    echo "TEST_SCA_TENANT is not set"
+    exit 1
+elif [ -z "$TEST_SCA_USERNAME" ]; then
+    echo "TEST_SCA_USERNAME is not set"
+    exit 1
+elif [ -z "$TEST_SCA_PASSWORD" ]; then
+    echo "TEST_SCA_PASSWORD is not set"
+    exit 1
+fi
+
 bundle_overrides_dir="tests/$testName/bundle-overrides"
 
 if [ -d "$bundle_overrides_dir" ]; then
