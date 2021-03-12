@@ -125,3 +125,5 @@ class ScanBase(unittest.TestCase):
 
         if not scan_completed:
             self.fail(f"Scan has not finished after {num_of_checks} checks")
+
+        return scan_completed
