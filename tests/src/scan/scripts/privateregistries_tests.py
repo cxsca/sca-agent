@@ -59,7 +59,8 @@ class PrivateRegistriesTests(ScanBase):
             print(f"Artifactory push pom result: `{response.status_code}`")
             self.assertEqual(response.status_code, 201)
 
-        self.create_project("ScaAgentTest-Private-Artifactory")
+        self.authorize()
+        self.create_project(projectAlias="ScaAgentTest-Private-Artifactory")
 
     def test_private_registries(self):
         # Get pre-signed url
