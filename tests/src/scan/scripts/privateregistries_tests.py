@@ -48,19 +48,21 @@ class PrivateRegistriesTests(ScanBase):
         print("Publish to artifactory ...")
 
         with open("assets/parent-project-1.0.0.jar", "rb") as file_to_send:
-            response = requests.put(f"{self.artifactory_base_url}/example-repo-local/com/checkmarx/parent-project/1.0.0/parent-project-1.0.0.jar",
+            response = requests.put(f"{self.artifactory_base_url}"
+                                    f"/example-repo-local/com/checkmarx/parent-project/1.0.0/parent-project-1.0.0.jar",
                                     data=file_to_send, auth=('admin', 'password'), verify=False)
             print(f"Artifactory push jar result: `{response.status_code}`")
             self.assertEqual(response.status_code, 201)
 
         with open("assets/parent-project-1.0.0.pom", "rb") as file_to_send:
-            response = requests.put(f"{self.artifactory_base_url}/example-repo-local/com/checkmarx/parent-project/1.0.0/parent-project-1.0.0.pom",
+            response = requests.put(f"{self.artifactory_base_url}"
+                                    f"/example-repo-local/com/checkmarx/parent-project/1.0.0/parent-project-1.0.0.pom",
                                     data=file_to_send, auth=('admin', 'password'), verify=False)
             print(f"Artifactory push pom result: `{response.status_code}`")
             self.assertEqual(response.status_code, 201)
 
         self.authorize()
-        self.create_project(projectAlias="ScaAgentTest-Private-Artifactory")
+        self.create_project(project_alias="ScaAgentTest-Private-Artifactory")
 
     def test_private_registries(self):
         # Get pre-signed url
@@ -75,7 +77,7 @@ class PrivateRegistriesTests(ScanBase):
             self.assertEqual(response.status_code, 200)
 
         # Initiate a scan
-        self.start_scan_and_wait(type="upload", url=pre_signed_url)
+        self.start_scan_and_wait(scan_type="upload", url=pre_signed_url)
 
         # Handle the response
         response = requests.get(f"{self.localhost}/risk-management/risk-reports/{self.scan_id}/packages",

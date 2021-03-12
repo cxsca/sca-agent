@@ -6,6 +6,10 @@ import time
 
 
 class ScanBase(unittest.TestCase):
+    """
+        A base class for tests, where scanning in SCA must be performed
+    """
+
     __test__ = False
 
     await_time_in_secs = 15.0
@@ -22,16 +26,24 @@ class ScanBase(unittest.TestCase):
         self.project_id = None
 
     def setUp(self):
+        """
+            Default setup for the Tests
+        """
         self.authorize()
 
     def tearDown(self):
+        """
+            Exists from the tests and deletes the project in SCA, that was temporarily produced for the test
+        """
         response = requests.delete(f"{self.localhost}/risk-management/projects/{self.project_id}",
                                    headers={"Authorization": f"bearer {self.access_token}"}, verify=False)
         self.assertEqual(response.status_code, 204)
+        self.project_id = None
 
-    # Sign in
     def authorize(self):
-
+        """
+            Get access token to authorize in SCA web application
+        """
         auth_body = {
             "grant_type": "password",
             "client_id": "sca_resource_owner",
@@ -42,33 +54,46 @@ class ScanBase(unittest.TestCase):
         }
 
         response = requests.post(f"{self.localhost}/identity/connect/token",
-                             headers={"Content-Type": "application/x-www-form-urlencoded"},
-                             data=auth_body, verify=False)
+                                 headers={"Content-Type": "application/x-www-form-urlencoded"},
+                                 data=auth_body, verify=False)
 
         self.assertEqual(response.status_code, 200)
         self.access_token = response.json()["access_token"]
 
-    def create_project(self, projectAlias):
-
+    def create_project(self, project_alias):
+        """
+            Creates a project in SCA for the particular Scan
+        :param project_alias: Name for the project to be used
+        :return: The SCA project with hex postfix. Format {projectAlias}-{random_hex}
+        """
         project_body = {
-            "name": f"{projectAlias}-{uuid.uuid4().hex}"
+            "name": f"{project_alias}-{uuid.uuid4().hex}"
         }
 
         response = requests.post(f"{self.localhost}/risk-management/projects",
-                             headers={"Authorization": f"bearer {self.access_token}"},
-                             json=project_body, verify=False)
+                                 headers={"Authorization": f"bearer {self.access_token}"},
+                                 json=project_body, verify=False)
 
         self.assertEqual(response.status_code, 201)
         self.project_id = response.json()["id"]
         print(f"Project Id: `{self.project_id}`")
 
     # Start Scan
-    def start_scan_and_wait(self, type, url, num_of_checks=20):
-
+    def start_scan_and_wait(self, scan_type, url, num_of_checks=20):
+        """
+            Starts the SCA scan to find vulnerabilities in 3rd parties
+        :param scan_type: `upload` or `git`
+        :param url: for `upload` url must be a pre-signed url, generated sca api and with downloaded asset.
+                    for `git` url must be a public! repository url
+        :param num_of_checks: Number of checks for scan to wait for. One check is 15 sec await time. In case the scan
+                              was not on time - the test will fail.
+        :return: exit code zero if everything is ok
+        :raise: unittest.fail in case the scan was not on time
+        """
         request_body = {
             "project": {
                 "id": f"{self.project_id}",
-                "type": f"{type}",
+                "type": f"{scan_type}",
                 "handler": {
                     "url": f"{url}"
                 }
