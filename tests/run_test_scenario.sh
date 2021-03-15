@@ -48,6 +48,4 @@ docker-compose -f docker-compose.yml -p "$testName-agent" down
 echo "======Shutdown Test======"
 docker-compose -f "tests/$testName/docker-compose.yml" down
 
-jobs
-kill %1
 exit $test_exit_code
