@@ -1,20 +1,18 @@
 # Scenario Testing
-
 This section will give an understanding on scenario testing in the SCA Agent
 
----
-####Fast Facts
-    Each Test is :
-    - A dockerized application
-    - An isolated and has its own instance of a running SCA Agent
-    - Runs in parallel
-    - Runs in its own Jenkins node
-___
+### Fast Facts
+
+Each Test is :
+* A dockerized application
+* An isolated and has its own instance of a running SCA Agent
+* Runs in parallel
+* Runs in its own Jenkins node
 
 ## Tests Structure
 All the tests are located in the `tests` folder and each have its own sub-directory with the **unique** test name.
 Next we call such a directory a `{test directory}`
----
+
 ### Basic Structure
 Each `test folder` has its own `docker-compose.yml` , which contain an information about how to run the test
 
@@ -26,7 +24,7 @@ Each `test folder` has its own `docker-compose.yml` , which contain an informati
       |--...
 ```
 
-___
+
 ### Override Defaults
 If you need to override default agent's files or configs, simple put them in `bundle-overrides/` directory.
 Keep in mind, that `bundle-override` directory is agent's root directory, so that if you need to change environment 
@@ -51,7 +49,6 @@ Files and directories inside the `bundle-overrides` will simply replace original
 Environment Variables can be overwritten by adding `.env.overrides` files in the root of `bundle-overrides`. 
 That will simply overwrite the values specified in `.env` by adding them to the bottom of the file. This will simply make
 the runtime work with new values.
-___
 
 ### Test Scenario docker-compose.yml
 
@@ -66,12 +63,14 @@ services:
 ```
 The test's `docker-compose.yml` must share the host network to do the requests to the running agent.
 To specify which tests to run simply add Environment Variable with the comma-separated test modules like specified above
----
 
-## Tests Runtime
+**!!! IMPORTANT !!!**
+**Make sure you following the structure, like in example above. Otherwise test won't run currectly!**
+
+## Test Runtime
 
 ```
-(Bundle) ===================> (Scenario Tests)
+(Bundle) ==(step^)====(step^)=========> (Scenario Tests)
     |                                  | -- test one
     |                                  | -- test two
     |                                  | -- test ...
@@ -89,8 +88,11 @@ To specify which tests to run simply add Environment Variable with the comma-sep
 1. If there is the file `.env.overrides` -> add specific environment variables to the Agent
 1. Agent startup
 1. Test startup 
-1. Test shutdown
 1. Agent shutdown
+1. Test shutdown
+___
+^ - Step can be presented in pipeline or not.This was illustrated only to show the possibility of other less important
+steps for "scenario tests" in the Jenkins pipeline.
 ___
 
 ### Running Testing Scenarios Locally

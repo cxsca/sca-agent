@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  goat-test:
+    image: goat-scan-agent
+    build: ../src/scan
+    network_mode: host
+    environment:
+      RUN_TEST_MODULES: scan_goat_tests
+      TEST_SCA_TENANT: ${TEST_SCA_TENANT}
+      TEST_SCA_USERNAME: ${TEST_SCA_USERNAME}
+      TEST_SCA_PASSWORD: ${TEST_SCA_PASSWORD}
