@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  cx-flow-test:
+    image: cx-flow-agent
+    build: ../src/connectivity
+    network_mode: host
+    environment:
+      RUN_TEST_MODULES: cxflow_tests
