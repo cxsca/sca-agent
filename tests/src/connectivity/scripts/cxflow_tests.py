@@ -6,7 +6,7 @@ from test_base import ConnectivityBase
 class CxFlowTests(ConnectivityBase):
     __test__ = True
 
-    def test_cxflow_connectivity(self):
+    def test_cxflow_health_check(self):
         # Wait for CxFlow to wake up correctly - about that time for secure startup
         time.sleep(60)
 

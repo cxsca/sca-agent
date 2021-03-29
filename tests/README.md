@@ -97,7 +97,7 @@ ___
 
 ### Running Testing Scenarios Locally
 
-**!!! IMPORTANT !!! Do not edit run_test_scenario.sh in any Windows Editor**
+**!!! IMPORTANT !!! Edit run_test_scenario.sh only with LF line-ending mode in Windows to avoid errors locally**
 
 To run the tests locally you have to run it from the `root` directory of your `sca-agent`
 
