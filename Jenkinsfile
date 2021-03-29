@@ -70,6 +70,8 @@ pipeline {
                         env.TEST_SCA_TENANT = creds["tenant"]
                         env.TEST_SCA_USERNAME = creds["username"]
                         env.TEST_SCA_PASSWORD = creds["password"]
+                        env.WEBHOOK_TOKEN = pipelineUtils.getGitHubToken()
+                        env.WEBHOOK_SECRET = pipelineUtils.getCommitShortSha1()
 
                         files.each {
 
@@ -100,9 +102,9 @@ pipeline {
                                                 error "Something went wrong, please check the logs (statusCode ${statusCode})"
                                              }
                                         }
-                                    }
-                                }
-                            }
+                                    } //Workspace
+                                } // Node
+                            } // Testing Scenario
                         }
                     }
 
