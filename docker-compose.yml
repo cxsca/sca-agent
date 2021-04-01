@@ -126,7 +126,7 @@ services:
       - sca-agent
   ########################################################################
   scan-runner:
-    image: cxsca/scan-runner:2021.03.09.1328-ced4b22
+    image: cxsca/scan-runner:2021.04.01.1202-fdeb81b
     restart: always
     environment:
       PRETTY: ${PRETTY_LOG}
