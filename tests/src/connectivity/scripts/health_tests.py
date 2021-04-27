@@ -12,7 +12,7 @@ class HealthCheckTests(ConnectivityBase):
         response_object = response.json()
         self.assertEqual(response_object["status"], "available")
         self.assertIsNotNone(response_object["version"])
-        self.assertEqual(len(response_object["notes"]), 3)
+        self.assertEqual(len(response_object["notes"]), 6)
 
     def test_minio_healthy(self):
 
