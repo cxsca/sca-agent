@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  connectivity-https-test:
+  https-test:
     image: connectivity-https-agent
     build: ../src/connectivity
     network_mode: host

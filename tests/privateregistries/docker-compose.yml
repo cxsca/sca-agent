@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  privateregistries-test:
+    image: private_registries-agent
+    build: ../src/scan
+    network_mode: host
+    depends_on:
+      - artifactory
+    environment:
+      RUN_TEST_MODULES: privateregistries_tests
+      TEST_SCA_TENANT: ${TEST_SCA_TENANT}
+      TEST_SCA_USERNAME: ${TEST_SCA_USERNAME}
+      TEST_SCA_PASSWORD: ${TEST_SCA_PASSWORD}
+
+  artifactory:
+    image: docker.bintray.io/jfrog/artifactory-oss:7.12.6
+    networks:
+      - sca-agent
+    ports:
+      - "8081:8081"
+      - "8082:8082"
+
+networks:
+  sca-agent:
+    name: sca-agent

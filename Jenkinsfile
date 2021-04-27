@@ -66,6 +66,13 @@ pipeline {
 
                         def files = findFiles(glob: '**/docker-compose*.yml')
 
+                        def creds = pipelineUtils.getSCAAgentParams()
+                        env.TEST_SCA_TENANT = creds["tenant"]
+                        env.TEST_SCA_USERNAME = creds["username"]
+                        env.TEST_SCA_PASSWORD = creds["password"]
+                        env.WEBHOOK_TOKEN = pipelineUtils.getGitHubToken()
+                        env.WEBHOOK_SECRET = pipelineUtils.getCommitShortSha1()
+
                         files.each {
 
                            def (testName, composeFile) = it.path.split('/')
@@ -88,14 +95,16 @@ pipeline {
                                         }
 
                                         dir("agent"){
-                                             def statusCode = sh label: "Run Sceario Test", script: "sh tests/run_test_scenario.sh ${testName}", returnStatus: true
-                                             if (statusCode == 1) {
-                                                error "Something went wrong, please check the logs"
+
+                                             def statusCode = sh label: "Run Scenario Test", script: "sh tests/run_test_scenario.sh ${testName}", returnStatus: true
+
+                                             if (statusCode != 0) {
+                                                error "Something went wrong, please check the logs (statusCode ${statusCode})"
                                              }
                                         }
-                                    }
-                                }
-                            }
+                                    } //Workspace
+                                } // Node
+                            } // Testing Scenario
                         }
                     }
 
