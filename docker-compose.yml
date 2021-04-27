@@ -142,6 +142,9 @@ services:
       ACCESS_CONTROL_TEST_URL: ${ACCESS_CONTROL_PROTOCOL}://${ACCESS_CONTROL_HOST}/identity/.well-known/openid-configuration
       SCA_API_URL: ${SCA_API_PROTOCOL}://${SCA_API_HOST}
       SCA_API_TEST_URL: ${SCA_API_PROTOCOL}://${SCA_API_HOST}/risk-management/health
+      SOURCE_RESOLVER_API_TEST_URL:  ${TRANSFER_PROTOCOL}://source-resolver/health
+      MINIO_API_TEST_URL:  ${TRANSFER_PROTOCOL}://minio:9000/minio/health/live
+      CX_FLOW_API_TEST_URL:  ${TRANSFER_PROTOCOL}://cx-flow:80/actuator/health
       SOURCERESOLVERAPI: http://source-resolver
       EXECUTIONMODE: sca-agent
       SCA_AGENT_VERSION: ${AGENT_VERSION}
