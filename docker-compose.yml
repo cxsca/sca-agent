@@ -148,6 +148,7 @@ services:
       HTTPS_PROXY:
       HTTP_PROXY:
       NO_PROXY:
+      HEALTH_CHECK_CACHE_EXPIRATION_TIMEOUT: 180
     labels:
       traefik.enable: "true"
       traefik.http.routers.scan-runner.rule: PathPrefix(`/api`)
